@@ -1,2 +1,2 @@
 # FireJs
-Light Jquery librairy 
+Light Jquery librairy with only Vanilla JS
