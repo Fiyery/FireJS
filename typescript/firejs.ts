@@ -354,7 +354,6 @@ class FireElement {
 	 * Show the element with its saved display property.
 	 */
 	show() : FireElement {
-		console.log('show');
 		this.element.style.display = (this.display) ? (this.display) : ('');
 		return this;
 	} 
@@ -363,7 +362,6 @@ class FireElement {
 	 * Hide the element with display egals none.
 	 */
 	hide() : FireElement {
-		console.log('hide');
 		this.display = (this.element.style.display) ? (this.element.style.display) : ('');
 		this.element.style.display = 'none';
 		return this;
@@ -378,9 +376,6 @@ class FireElement {
 		} else {
 			this.show();
 		}
-		console.log(this.display);
-		console.log(this.element.style.display);
-		console.log(this);
 		return this;
 	}
 }

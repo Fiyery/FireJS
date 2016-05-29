@@ -317,7 +317,6 @@ var FireElement = (function () {
      * Show the element with its saved display property.
      */
     FireElement.prototype.show = function () {
-        console.log('show');
         this.element.style.display = (this.display) ? (this.display) : ('');
         return this;
     };
@@ -325,7 +324,6 @@ var FireElement = (function () {
      * Hide the element with display egals none.
      */
     FireElement.prototype.hide = function () {
-        console.log('hide');
         this.display = (this.element.style.display) ? (this.element.style.display) : ('');
         this.element.style.display = 'none';
         return this;
@@ -340,9 +338,6 @@ var FireElement = (function () {
         else {
             this.show();
         }
-        console.log(this.display);
-        console.log(this.element.style.display);
-        console.log(this);
         return this;
     };
     return FireElement;
