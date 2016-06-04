@@ -216,7 +216,14 @@ var FireElement = (function () {
      * Setup of object.
      */
     function FireElement(e) {
+        /**
+         * Save the display property for hide and show methods.
+         */
+        this.display = 'block';
         this.element = e;
+        this.css = document.defaultView.getComputedStyle(this.element, null);
+        // Need for toggle. 
+        this.element.style.display = this.css.display;
     }
     /**
      * Get the property of HTMLElement.
@@ -317,14 +324,14 @@ var FireElement = (function () {
      * Show the element with its saved display property.
      */
     FireElement.prototype.show = function () {
-        this.element.style.display = (this.display) ? (this.display) : ('');
+        this.element.style.display = this.display;
         return this;
     };
     /**
      * Hide the element with display egals none.
      */
     FireElement.prototype.hide = function () {
-        this.display = (this.element.style.display) ? (this.element.style.display) : ('');
+        this.display = (this.element.style.display) ? (this.element.style.display) : ('block');
         this.element.style.display = 'none';
         return this;
     };
@@ -332,11 +339,11 @@ var FireElement = (function () {
      * Toggle the visibility of element.
      */
     FireElement.prototype.toggle = function () {
-        if (this.element.style.display !== 'none') {
-            this.hide();
+        if (this.element.style.display === 'none') {
+            this.show();
         }
         else {
-            this.show();
+            this.hide();
         }
         return this;
     };
