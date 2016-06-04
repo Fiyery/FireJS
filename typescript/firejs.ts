@@ -233,13 +233,22 @@ class FireElement {
 	/**
 	 * Save the display property for hide and show methods.
 	 */
-	display : string;
+	display : string = 'block';
+
+	/**
+	 * Liste of CSS Stylesheet properties.
+	 */
+	css : any;
 
 	/**
 	 * Setup of object.
 	 */
 	constructor(e : HTMLElement) {	
 		this.element = e;
+		this.css = document.defaultView.getComputedStyle(this.element, null);
+
+		// Need for toggle. 
+		this.element.style.display = this.css.display;
 	}
 	
 	/**
@@ -354,8 +363,7 @@ class FireElement {
 	 * Show the element with its saved display property.
 	 */
 	show() : FireElement {
-		console.log('show');
-		this.element.style.display = (this.display) ? (this.display) : ('');
+		this.element.style.display = this.display;
 		return this;
 	} 
 	
@@ -363,8 +371,7 @@ class FireElement {
 	 * Hide the element with display egals none.
 	 */
 	hide() : FireElement {
-		console.log('hide');
-		this.display = (this.element.style.display) ? (this.element.style.display) : ('');
+		this.display = (this.element.style.display) ? (this.element.style.display) : ('block');
 		this.element.style.display = 'none';
 		return this;
 	}
@@ -373,14 +380,11 @@ class FireElement {
 	 * Toggle the visibility of element.
 	 */
 	toggle() : FireElement {
-		if (this.element.style.display !== 'none') {
-			this.hide();
-		} else {
+		if (this.element.style.display === 'none') {
 			this.show();
+		} else {
+			this.hide();
 		}
-		console.log(this.display);
-		console.log(this.element.style.display);
-		console.log(this);
 		return this;
 	}
 }
