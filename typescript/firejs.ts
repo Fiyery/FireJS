@@ -295,7 +295,10 @@ class FireElement {
 	 */
 	on(event : string, callback) : FireElement {
 		if (callback && typeof callback === 'function') {
-			this.element.addEventListener(event, callback);
+			let that = this;
+			this.element.addEventListener(event, function() {
+				callback.call(that);
+			});
 		}
 		return this;
 	}

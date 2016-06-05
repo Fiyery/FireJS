@@ -264,7 +264,10 @@ var FireElement = (function () {
      */
     FireElement.prototype.on = function (event, callback) {
         if (callback && typeof callback === 'function') {
-            this.element.addEventListener(event, callback);
+            var that_1 = this;
+            this.element.addEventListener(event, function () {
+                callback.call(that_1);
+            });
         }
         return this;
     };
