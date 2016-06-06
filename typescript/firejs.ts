@@ -218,6 +218,21 @@ class FireElements extends Array<FireElement> {
 		});
 		return this;
 	}
+
+	/**
+	 *	Get values of form elements.
+	 */
+	val(): string | boolean | any {
+		let values = [];
+		this.forEach(function(e: FireElement) {
+			values.push(e.val());
+		});
+		if (values.length === 1) {
+			return values[0];
+		} else {
+			return values;
+		}
+	}
 }
 
 /**
@@ -314,14 +329,18 @@ class FireElement {
 	 * Define a attribut and its value.
 	 */
 	set(name : string, value : string) : FireElement {
-		this.element.setAttribute(name, value);
+		if (value === null) {
+			this.element.removeAttribute(name);
+		} else {
+			this.element.setAttribute(name, value);
+		}
 		return this;
 	}
 	
 	/**
 	 * Get value of attribut
 	 */
-	get(name : string) : String {
+	get(name : string) : string {
 		return this.element.getAttribute(name);
 	}
 	
@@ -389,6 +408,29 @@ class FireElement {
 			this.hide();
 		}
 		return this;
+	}
+
+	/**
+	 *	Get values of form elements.
+	 */
+	val(): string | boolean {
+		let el: HTMLInputElement;
+		if (this.get('id') === null) {
+			let id = Math.random().toString();
+			this.set('id', id);
+			el = <HTMLInputElement>document.getElementById(id);
+			this.set('id', null);
+		} else {
+			console.log('ko');
+			el = <HTMLInputElement>document.getElementById(this.get('id'));
+		}
+		if (el.type.toLowerCase() === 'checkbox') {
+			return el.checked;
+		} else if (el.value) {
+			return el.value;
+		} else {
+			return '';
+		}
 	}
 }
 
