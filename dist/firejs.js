@@ -385,7 +385,7 @@ var FireElement = (function () {
             console.log('ko');
             el = document.getElementById(this.get('id'));
         }
-        if (el.type.toLowerCase() === 'checkbox') {
+        if (el.type && el.type.toLowerCase() === 'checkbox') {
             return el.checked;
         }
         else if (el.value) {
