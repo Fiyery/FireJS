@@ -206,6 +206,21 @@ var FireElements = (function (_super) {
         });
         return this;
     };
+    /**
+     *	Get values of form elements.
+     */
+    FireElements.prototype.val = function () {
+        var values = [];
+        this.forEach(function (e) {
+            values.push(e.val());
+        });
+        if (values.length === 1) {
+            return values[0];
+        }
+        else {
+            return values;
+        }
+    };
     return FireElements;
 }(Array));
 /**
@@ -281,7 +296,12 @@ var FireElement = (function () {
      * Define a attribut and its value.
      */
     FireElement.prototype.set = function (name, value) {
-        this.element.setAttribute(name, value);
+        if (value === null) {
+            this.element.removeAttribute(name);
+        }
+        else {
+            this.element.setAttribute(name, value);
+        }
         return this;
     };
     /**
@@ -349,6 +369,31 @@ var FireElement = (function () {
             this.hide();
         }
         return this;
+    };
+    /**
+     *	Get values of form elements.
+     */
+    FireElement.prototype.val = function () {
+        var el;
+        if (this.get('id') === null) {
+            var id = Math.random().toString();
+            this.set('id', id);
+            el = document.getElementById(id);
+            this.set('id', null);
+        }
+        else {
+            console.log('ko');
+            el = document.getElementById(this.get('id'));
+        }
+        if (el.type.toLowerCase() === 'checkbox') {
+            return el.checked;
+        }
+        else if (el.value) {
+            return el.value;
+        }
+        else {
+            return '';
+        }
     };
     return FireElement;
 }());
