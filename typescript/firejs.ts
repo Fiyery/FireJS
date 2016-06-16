@@ -260,10 +260,12 @@ class FireElement {
 	 */
 	constructor(e : HTMLElement) {	
 		this.element = e;
-		this.css = document.defaultView.getComputedStyle(this.element, null);
+		if (e) {
+			this.css = document.defaultView.getComputedStyle(this.element, null);
 
-		// Need for toggle. 
-		this.element.style.display = this.css.display;
+			// Need for toggle. 
+			this.element.style.display = this.css.display;
+		}
 	}
 	
 	/**
@@ -295,14 +297,24 @@ class FireElement {
 	 * Get the next element.
 	 */
 	next() : FireElement {
-		return new FireElement(this.getProperty('nextSibling'));
+		let el = this.getProperty('nextElementSibling');
+		if (el) {
+			return new FireElement(el);
+		} else {
+			return null;		
+		}
 	}
 	
 	/**
 	 * Get the previous element.
 	 */
 	prev() : FireElement {
-		return new FireElement(this.getProperty('previousSibling'));
+		let el = this.getProperty('previousElementSibling');
+		if (el) {
+			return new FireElement(el);
+		} else {
+			return null;
+		}
 	}
 	
 	/**

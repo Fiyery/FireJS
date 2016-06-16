@@ -236,9 +236,11 @@ var FireElement = (function () {
          */
         this.display = 'block';
         this.element = e;
-        this.css = document.defaultView.getComputedStyle(this.element, null);
-        // Need for toggle. 
-        this.element.style.display = this.css.display;
+        if (e) {
+            this.css = document.defaultView.getComputedStyle(this.element, null);
+            // Need for toggle. 
+            this.element.style.display = this.css.display;
+        }
     }
     /**
      * Get the property of HTMLElement.
@@ -266,13 +268,25 @@ var FireElement = (function () {
      * Get the next element.
      */
     FireElement.prototype.next = function () {
-        return new FireElement(this.getProperty('nextSibling'));
+        var el = this.getProperty('nextElementSibling');
+        if (el) {
+            return new FireElement(el);
+        }
+        else {
+            return null;
+        }
     };
     /**
      * Get the previous element.
      */
     FireElement.prototype.prev = function () {
-        return new FireElement(this.getProperty('previousSibling'));
+        var el = this.getProperty('previousElementSibling');
+        if (el) {
+            return new FireElement(el);
+        }
+        else {
+            return null;
+        }
     };
     /**
      * Listen a event and execute the callback function when event triggering.
