@@ -72,7 +72,7 @@ class FireElements extends Array<FireElement> {
 	}
 	
 	/**
-	 * Get the chidren.
+	 * Get the chidren element.
 	 */
 	children() : FireElements {
 		let list : FireElements = new FireElements();
@@ -291,6 +291,13 @@ class FireElement {
 			list.push(e);
 		});
 		return list;
+	}
+
+	/**
+	 * Get childNodes.
+	 */
+	childNodes() : NodeList {
+		return this.element.childNodes;
 	}
 	
 	/**

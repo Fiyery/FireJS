@@ -73,7 +73,7 @@ var FireElements = (function (_super) {
         return list;
     };
     /**
-     * Get the chidren.
+     * Get the chidren element.
      */
     FireElements.prototype.children = function () {
         var list = new FireElements();
@@ -263,6 +263,12 @@ var FireElement = (function () {
             list.push(e);
         });
         return list;
+    };
+    /**
+     * Get childNodes.
+     */
+    FireElement.prototype.childNodes = function () {
+        return this.element.childNodes;
     };
     /**
      * Get the next element.
