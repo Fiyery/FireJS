@@ -85,6 +85,38 @@ var FireElements = (function (_super) {
         return list;
     };
     /**
+     * Delete on or  de la liste
+     */
+    FireElements.prototype.not = function (elements) {
+        var list = new FireElements();
+        var _loop_1 = function(i) {
+            var e = this_1[i];
+            if (elements.element) {
+                console.log('one');
+                if (elements.element !== e.element) {
+                    list.push(e);
+                }
+            }
+            else {
+                console.log('array');
+                var find_1 = false;
+                elements.forEach(function (el) {
+                    if (el.element === e.element) {
+                        find_1 = true;
+                    }
+                });
+                if (find_1 === false) {
+                    list.push(e);
+                }
+            }
+        };
+        var this_1 = this;
+        for (var i = 0; i < this.length; i++) {
+            _loop_1(i);
+        }
+        return list;
+    };
+    /**
      * Get the next element.
      */
     FireElements.prototype.next = function (name) {
