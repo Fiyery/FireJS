@@ -92,12 +92,10 @@ class FireElements extends Array<FireElement> {
 		for (let i = 0; i < this.length; i++) {
 			let e = this[i];
 			if (elements.element) {
-				console.log('one');
 				if (elements.element !== e.element) {
 					list.push(e);
 				}
 			} else {
-				console.log('array');
 				let find = false;
 				elements.forEach(function(el){
 					if (el.element === e.element) {
