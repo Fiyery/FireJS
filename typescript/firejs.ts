@@ -83,6 +83,34 @@ class FireElements extends Array<FireElement> {
 		});
 		return list;
 	}
+
+	/**
+	 * Delete on or  de la liste
+	 */
+	not(elements) : FireElements {
+		let list : FireElements = new FireElements();
+		for (let i = 0; i < this.length; i++) {
+			let e = this[i];
+			if (elements.element) {
+				console.log('one');
+				if (elements.element !== e.element) {
+					list.push(e);
+				}
+			} else {
+				console.log('array');
+				let find = false;
+				elements.forEach(function(el){
+					if (el.element === e.element) {
+						find = true;
+					}
+				});
+				if (find === false) {
+					list.push(e);
+				}
+			}
+		}
+		return list;
+	}
 	
 	/**
 	 * Get the next element.
