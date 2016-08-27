@@ -5,13 +5,13 @@
  */
 class FireJs {
 	
-	queries : any;
+	datalist : any;
 
 	/**
 	 * Setup of object.
 	 */
 	constructor() {	
-		this.queries = {};
+		this.datalist = {};
 	}
 	
 	/**
@@ -28,26 +28,38 @@ class FireJs {
 	 * Warning : All the queries are cached, to reset the query, set reset param to true
 	 */
 	get(query : string, reset : boolean = false) : FireElements {
-		if (reset || !this.queries[query]) {
-			let res : any = document.querySelectorAll(query);
-			let list : FireElements = new FireElements();
-			switch (res.length) {
-				case 0 : 
-					list = null;
-					break;
-				case 1 : 
-					list = new FireElements();
+		let res : any = document.querySelectorAll(query);
+		let list : FireElements = new FireElements();
+		switch (res.length) {
+			case 0 : 
+				list = null;
+				break;
+			case 1 : 
+				if (res[0].firejs_id) {
+					// If element is known, it was loaded from datalist.
+					list.push(this.datalist[res[0].firejs_id]);
+				} else {
 					let f : FireElement = new FireElement(res[0]);
+					// Add to datalist elements.
+					this.datalist[f.getProperty('firejs_id')] = f;
 					list.push(f);
-					break;
-				default : 
-					[].forEach.call(res, function(e : any){
-						list.push(new FireElement(e));
-					});
-			}
-			this.queries[query] = list;
+				}
+				break;
+			default : 
+				let that = this;
+				[].forEach.call(res, function(e : any){
+					if (e.firejs_id) {
+						// If element is known, it was loaded from datalist.
+						list.push(this.datalist[e.firejs_id]);
+					} else {
+						let f : FireElement = new FireElement(e);
+						// Add to datalist elements.
+						that.datalist[f.getProperty('firejs_id')] = f;
+						list.push(f);
+					}
+				});
 		}
-		return this.queries[query];
+		return list;
 	}
 }
 
@@ -292,6 +304,8 @@ class FireElement {
 			// Need for toggle. 
 			this.element.style.display = this.css.display;
 		}
+		let node : any = this.element;
+		node.firejs_id = Date.now().toString()+'-'+Math.random().toString().substring(2, 7);
 	}
 	
 	/**

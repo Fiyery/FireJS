@@ -12,7 +12,7 @@ var FireJs = (function () {
      * Setup of object.
      */
     function FireJs() {
-        this.queries = {};
+        this.datalist = {};
     }
     /**
      * Execute the callback function when the page is loaded.
@@ -28,26 +28,40 @@ var FireJs = (function () {
      */
     FireJs.prototype.get = function (query, reset) {
         if (reset === void 0) { reset = false; }
-        if (reset || !this.queries[query]) {
-            var res = document.querySelectorAll(query);
-            var list_1 = new FireElements();
-            switch (res.length) {
-                case 0:
-                    list_1 = null;
-                    break;
-                case 1:
-                    list_1 = new FireElements();
+        var res = document.querySelectorAll(query);
+        var list = new FireElements();
+        switch (res.length) {
+            case 0:
+                list = null;
+                break;
+            case 1:
+                if (res[0].firejs_id) {
+                    // If element is known, it was loaded from datalist.
+                    list.push(this.datalist[res[0].firejs_id]);
+                }
+                else {
                     var f = new FireElement(res[0]);
-                    list_1.push(f);
-                    break;
-                default:
-                    [].forEach.call(res, function (e) {
-                        list_1.push(new FireElement(e));
-                    });
-            }
-            this.queries[query] = list_1;
+                    // Add to datalist elements.
+                    this.datalist[f.getProperty('firejs_id')] = f;
+                    list.push(f);
+                }
+                break;
+            default:
+                var that_1 = this;
+                [].forEach.call(res, function (e) {
+                    if (e.firejs_id) {
+                        // If element is known, it was loaded from datalist.
+                        list.push(this.datalist[e.firejs_id]);
+                    }
+                    else {
+                        var f = new FireElement(e);
+                        // Add to datalist elements.
+                        that_1.datalist[f.getProperty('firejs_id')] = f;
+                        list.push(f);
+                    }
+                });
         }
-        return this.queries[query];
+        return list;
     };
     return FireJs;
 }());
@@ -92,13 +106,11 @@ var FireElements = (function (_super) {
         var _loop_1 = function(i) {
             var e = this_1[i];
             if (elements.element) {
-                console.log('one');
                 if (elements.element !== e.element) {
                     list.push(e);
                 }
             }
             else {
-                console.log('array');
                 var find_1 = false;
                 elements.forEach(function (el) {
                     if (el.element === e.element) {
@@ -273,6 +285,8 @@ var FireElement = (function () {
             // Need for toggle. 
             this.element.style.display = this.css.display;
         }
+        var node = this.element;
+        node.firejs_id = Date.now().toString() + '-' + Math.random().toString().substring(2, 7);
     }
     /**
      * Get the property of HTMLElement.
@@ -331,9 +345,9 @@ var FireElement = (function () {
      */
     FireElement.prototype.on = function (event, callback) {
         if (callback && typeof callback === 'function') {
-            var that_1 = this;
+            var that_2 = this;
             this.element.addEventListener(event, function () {
-                callback.call(that_1);
+                callback.call(that_2);
             });
         }
         return this;
