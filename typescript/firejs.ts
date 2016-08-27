@@ -46,7 +46,6 @@ class FireJs {
 				}
 				break;
 			default : 
-				let that = this;
 				[].forEach.call(res, function(e : any){
 					if (e.firejs_id) {
 						// If element is known, it was loaded from datalist.
@@ -54,10 +53,10 @@ class FireJs {
 					} else {
 						let f : FireElement = new FireElement(e);
 						// Add to datalist elements.
-						that.datalist[f.getProperty('firejs_id')] = f;
+						this.datalist[f.getProperty('firejs_id')] = f;
 						list.push(f);
 					}
-				});
+				}, this);
 		}
 		return list;
 	}
