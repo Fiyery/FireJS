@@ -47,7 +47,6 @@ var FireJs = (function () {
                 }
                 break;
             default:
-                var that_1 = this;
                 [].forEach.call(res, function (e) {
                     if (e.firejs_id) {
                         // If element is known, it was loaded from datalist.
@@ -56,10 +55,10 @@ var FireJs = (function () {
                     else {
                         var f = new FireElement(e);
                         // Add to datalist elements.
-                        that_1.datalist[f.getProperty('firejs_id')] = f;
+                        this.datalist[f.getProperty('firejs_id')] = f;
                         list.push(f);
                     }
-                });
+                }, this);
         }
         return list;
     };
@@ -345,9 +344,9 @@ var FireElement = (function () {
      */
     FireElement.prototype.on = function (event, callback) {
         if (callback && typeof callback === 'function') {
-            var that_2 = this;
+            var that_1 = this;
             this.element.addEventListener(event, function () {
-                callback.call(that_2);
+                callback.call(that_1);
             });
         }
         return this;
