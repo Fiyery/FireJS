@@ -24,10 +24,8 @@ var FireJs = (function () {
     };
     /**
      * Get the HTML elements with CSS selector.
-     * Warning : All the queries are cached, to reset the query, set reset param to true
      */
-    FireJs.prototype.get = function (query, reset) {
-        if (reset === void 0) { reset = false; }
+    FireJs.prototype.get = function (query) {
         var res = document.querySelectorAll(query);
         var list = new FireElements();
         switch (res.length) {
@@ -35,32 +33,30 @@ var FireJs = (function () {
                 list = null;
                 break;
             case 1:
-                if (res[0].firejs_id) {
-                    // If element is known, it was loaded from datalist.
-                    list.push(this.datalist[res[0].firejs_id]);
-                }
-                else {
-                    var f = new FireElement(res[0]);
-                    // Add to datalist elements.
-                    this.datalist[f.getProperty('firejs_id')] = f;
-                    list.push(f);
-                }
+                list.push(this.new(res[0]));
                 break;
             default:
                 [].forEach.call(res, function (e) {
-                    if (e.firejs_id) {
-                        // If element is known, it was loaded from datalist.
-                        list.push(this.datalist[e.firejs_id]);
-                    }
-                    else {
-                        var f = new FireElement(e);
-                        // Add to datalist elements.
-                        this.datalist[f.getProperty('firejs_id')] = f;
-                        list.push(f);
-                    }
+                    list.push(this.new(e));
                 }, this);
         }
         return list;
+    };
+    /**
+     * Create a FireElement from HTMLElement.
+     */
+    FireJs.prototype.new = function (e) {
+        var el = e;
+        if (el.firejs_id && this.datalist[el.firejs_id]) {
+            // If element is known, it was loaded from datalist.
+            return this.datalist[el.firejs_id];
+        }
+        else {
+            var f = new FireElement(e, this);
+            // Add to datalist elements.
+            this.datalist[f.getProperty('firejs_id')] = f;
+            return f;
+        }
     };
     return FireJs;
 }());
@@ -273,11 +269,12 @@ var FireElement = (function () {
     /**
      * Setup of object.
      */
-    function FireElement(e) {
+    function FireElement(e, firejs) {
         /**
          * Save the display property for hide and show methods.
          */
         this.display = 'block';
+        this.firejs = firejs;
         this.element = e;
         if (e) {
             this.css = document.defaultView.getComputedStyle(this.element, null);
@@ -297,15 +294,15 @@ var FireElement = (function () {
      * Get the parent.
      */
     FireElement.prototype.parent = function () {
-        return new FireElement(this.getProperty('parentNode'));
+        return this.firejs.new(this.getProperty('parentNode'));
     };
     /**
      * Get the chidren.
      */
     FireElement.prototype.children = function () {
         var list = new FireElements();
-        [].forEach.call(this.element.children, function (e) {
-            list.push(e);
+        [].forEach.call(this.getProperty('children'), function (e) {
+            list.push(this.firejs.new(e));
         });
         return list;
     };
@@ -321,7 +318,7 @@ var FireElement = (function () {
     FireElement.prototype.next = function () {
         var el = this.getProperty('nextElementSibling');
         if (el) {
-            return new FireElement(el);
+            return this.firejs.new(el);
         }
         else {
             return null;
@@ -333,7 +330,7 @@ var FireElement = (function () {
     FireElement.prototype.prev = function () {
         var el = this.getProperty('previousElementSibling');
         if (el) {
-            return new FireElement(el);
+            return this.firejs.new(el);
         }
         else {
             return null;
@@ -419,7 +416,9 @@ var FireElement = (function () {
      * Hide the element with display egals none.
      */
     FireElement.prototype.hide = function () {
-        this.display = (this.element.style.display) ? (this.element.style.display) : ('block');
+        if (this.element.style.display !== 'none') {
+            this.display = (this.element.style.display) ? (this.element.style.display) : ('block');
+        }
         this.element.style.display = 'none';
         return this;
     };

@@ -25,9 +25,8 @@ class FireJs {
 	
 	/**
 	 * Get the HTML elements with CSS selector.
-	 * Warning : All the queries are cached, to reset the query, set reset param to true
 	 */
-	get(query : string, reset : boolean = false) : FireElements {
+	get(query : string) : FireElements {
 		let res : any = document.querySelectorAll(query);
 		let list : FireElements = new FireElements();
 		switch (res.length) {
@@ -35,30 +34,30 @@ class FireJs {
 				list = null;
 				break;
 			case 1 : 
-				if (res[0].firejs_id) {
-					// If element is known, it was loaded from datalist.
-					list.push(this.datalist[res[0].firejs_id]);
-				} else {
-					let f : FireElement = new FireElement(res[0]);
-					// Add to datalist elements.
-					this.datalist[f.getProperty('firejs_id')] = f;
-					list.push(f);
-				}
+				list.push(this.new(res[0]));
 				break;
 			default : 
 				[].forEach.call(res, function(e : any){
-					if (e.firejs_id) {
-						// If element is known, it was loaded from datalist.
-						list.push(this.datalist[e.firejs_id]);
-					} else {
-						let f : FireElement = new FireElement(e);
-						// Add to datalist elements.
-						this.datalist[f.getProperty('firejs_id')] = f;
-						list.push(f);
-					}
+					list.push(this.new(e));
 				}, this);
 		}
 		return list;
+	}
+
+	/**
+	 * Create a FireElement from HTMLElement.
+	 */
+	new(e : HTMLElement) : FireElement {
+		let el : any = e;
+		if (el.firejs_id && this.datalist[el.firejs_id]) {
+			// If element is known, it was loaded from datalist.
+			return this.datalist[el.firejs_id];
+		} else {
+			let f : FireElement = new FireElement(e, this);
+			// Add to datalist elements.
+			this.datalist[f.getProperty('firejs_id')] = f;
+			return f;
+		}
 	}
 }
 
@@ -293,9 +292,15 @@ class FireElement {
 	css : any;
 
 	/**
+	 * librairy FireJS Factory for new FireElement.
+	 */
+	firejs : FireJs;
+
+	/**
 	 * Setup of object.
 	 */
-	constructor(e : HTMLElement) {	
+	constructor(e : HTMLElement, firejs : FireJs) {	
+		this.firejs = firejs;
 		this.element = e;
 		if (e) {
 			this.css = document.defaultView.getComputedStyle(this.element, null);
@@ -318,7 +323,7 @@ class FireElement {
 	 * Get the parent.
 	 */
 	parent() : FireElement {
-		return new FireElement(this.getProperty('parentNode'));
+		return this.firejs.new(this.getProperty('parentNode'));
 	}
 	
 	/**
@@ -326,8 +331,8 @@ class FireElement {
 	 */
 	children() : FireElements {
 		let list : FireElements = new FireElements();
-		[].forEach.call(this.element.children, function(e){
-			list.push(e);
+		[].forEach.call(this.getProperty('children'), function(e){
+			list.push(this.firejs.new(e));
 		});
 		return list;
 	}
@@ -343,9 +348,9 @@ class FireElement {
 	 * Get the next element.
 	 */
 	next() : FireElement {
-		let el = this.getProperty('nextElementSibling');
+		let el : HTMLElement = this.getProperty('nextElementSibling');
 		if (el) {
-			return new FireElement(el);
+			return this.firejs.new(el);
 		} else {
 			return null;		
 		}
@@ -355,9 +360,9 @@ class FireElement {
 	 * Get the previous element.
 	 */
 	prev() : FireElement {
-		let el = this.getProperty('previousElementSibling');
+		let el : HTMLElement = this.getProperty('previousElementSibling');
 		if (el) {
-			return new FireElement(el);
+			return this.firejs.new(el);
 		} else {
 			return null;
 		}
@@ -451,7 +456,9 @@ class FireElement {
 	 * Hide the element with display egals none.
 	 */
 	hide() : FireElement {
-		this.display = (this.element.style.display) ? (this.element.style.display) : ('block');
+		if (this.element.style.display !== 'none') {
+			this.display = (this.element.style.display) ? (this.element.style.display) : ('block');
+		}
 		this.element.style.display = 'none';
 		return this;
 	}
