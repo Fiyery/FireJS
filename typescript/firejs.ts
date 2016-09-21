@@ -374,8 +374,8 @@ class FireElement {
 	on(event : string, callback) : FireElement {
 		if (callback && typeof callback === 'function') {
 			let that = this;
-			this.element.addEventListener(event, function() {
-				callback.call(that);
+			this.element.addEventListener(event, function(event) {
+				callback.call(that, event);
 			});
 		}
 		return this;
