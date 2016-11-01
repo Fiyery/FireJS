@@ -12,7 +12,7 @@ var FireJs = (function () {
      * Setup of object.
      */
     function FireJs() {
-        this.queries = {};
+        this.datalist = {};
     }
     /**
      * Execute the callback function when the page is loaded.
@@ -24,30 +24,39 @@ var FireJs = (function () {
     };
     /**
      * Get the HTML elements with CSS selector.
-     * Warning : All the queries are cached, to reset the query, set reset param to true
      */
-    FireJs.prototype.get = function (query, reset) {
-        if (reset === void 0) { reset = false; }
-        if (reset || !this.queries[query]) {
-            var res = document.querySelectorAll(query);
-            var list_1 = new FireElements();
-            switch (res.length) {
-                case 0:
-                    list_1 = null;
-                    break;
-                case 1:
-                    list_1 = new FireElements();
-                    var f = new FireElement(res[0]);
-                    list_1.push(f);
-                    break;
-                default:
-                    [].forEach.call(res, function (e) {
-                        list_1.push(new FireElement(e));
-                    });
-            }
-            this.queries[query] = list_1;
+    FireJs.prototype.get = function (query) {
+        var res = document.querySelectorAll(query);
+        var list = new FireElements();
+        switch (res.length) {
+            case 0:
+                list = null;
+                break;
+            case 1:
+                list.push(this.new(res[0]));
+                break;
+            default:
+                [].forEach.call(res, function (e) {
+                    list.push(this.new(e));
+                }, this);
         }
-        return this.queries[query];
+        return list;
+    };
+    /**
+     * Create a FireElement from HTMLElement.
+     */
+    FireJs.prototype.new = function (e) {
+        var el = e;
+        if (el.firejs_id && this.datalist[el.firejs_id]) {
+            // If element is known, it was loaded from datalist.
+            return this.datalist[el.firejs_id];
+        }
+        else {
+            var f = new FireElement(e, this);
+            // Add to datalist elements.
+            this.datalist[f.getProperty('firejs_id')] = f;
+            return f;
+        }
     };
     return FireJs;
 }());
@@ -92,13 +101,11 @@ var FireElements = (function (_super) {
         var _loop_1 = function(i) {
             var e = this_1[i];
             if (elements.element) {
-                console.log('one');
                 if (elements.element !== e.element) {
                     list.push(e);
                 }
             }
             else {
-                console.log('array');
                 var find_1 = false;
                 elements.forEach(function (el) {
                     if (el.element === e.element) {
@@ -133,6 +140,18 @@ var FireElements = (function (_super) {
         var list = new FireElements();
         this.forEach(function (e) {
             list.push(e.prev());
+        });
+        return list;
+    };
+    /**
+     * Find elements in children nodes.
+     */
+    FireElements.prototype.find = function (query) {
+        var list = new FireElements();
+        this.forEach(function (el) {
+            el.find(query).forEach(function (e) {
+                list.push(e);
+            });
         });
         return list;
     };
@@ -253,6 +272,16 @@ var FireElements = (function (_super) {
             return values;
         }
     };
+    /**
+     * Return the nodes.
+     */
+    FireElements.prototype.node = function () {
+        var list = [];
+        this.forEach(function (e) {
+            list.push(e.node());
+        });
+        return list;
+    };
     return FireElements;
 }(Array));
 /**
@@ -262,17 +291,20 @@ var FireElement = (function () {
     /**
      * Setup of object.
      */
-    function FireElement(e) {
+    function FireElement(e, firejs) {
         /**
          * Save the display property for hide and show methods.
          */
         this.display = 'block';
+        this.firejs = firejs;
         this.element = e;
         if (e) {
             this.css = document.defaultView.getComputedStyle(this.element, null);
             // Need for toggle. 
             this.element.style.display = this.css.display;
         }
+        var node = this.element;
+        node.firejs_id = Date.now().toString() + '-' + Math.random().toString().substring(2, 7);
     }
     /**
      * Get the property of HTMLElement.
@@ -284,15 +316,15 @@ var FireElement = (function () {
      * Get the parent.
      */
     FireElement.prototype.parent = function () {
-        return new FireElement(this.getProperty('parentNode'));
+        return this.firejs.new(this.getProperty('parentNode'));
     };
     /**
      * Get the chidren.
      */
     FireElement.prototype.children = function () {
         var list = new FireElements();
-        [].forEach.call(this.element.children, function (e) {
-            list.push(e);
+        [].forEach.call(this.getProperty('children'), function (e) {
+            list.push(this.firejs.new(e));
         });
         return list;
     };
@@ -308,7 +340,7 @@ var FireElement = (function () {
     FireElement.prototype.next = function () {
         var el = this.getProperty('nextElementSibling');
         if (el) {
-            return new FireElement(el);
+            return this.firejs.new(el);
         }
         else {
             return null;
@@ -320,11 +352,23 @@ var FireElement = (function () {
     FireElement.prototype.prev = function () {
         var el = this.getProperty('previousElementSibling');
         if (el) {
-            return new FireElement(el);
+            return this.firejs.new(el);
         }
         else {
             return null;
         }
+    };
+    /**
+     * Find elements in children nodes.
+     */
+    FireElement.prototype.find = function (query) {
+        var list = new FireElements();
+        var that = this;
+        [].forEach.call(this.element.querySelectorAll(query), function (e) {
+            var f = that.firejs.new(e);
+            list.push(f);
+        });
+        return list;
     };
     /**
      * Listen a event and execute the callback function when event triggering.
@@ -332,8 +376,8 @@ var FireElement = (function () {
     FireElement.prototype.on = function (event, callback) {
         if (callback && typeof callback === 'function') {
             var that_1 = this;
-            this.element.addEventListener(event, function () {
-                callback.call(that_1);
+            this.element.addEventListener(event, function (event) {
+                callback.call(that_1, event);
             });
         }
         return this;
@@ -406,7 +450,9 @@ var FireElement = (function () {
      * Hide the element with display egals none.
      */
     FireElement.prototype.hide = function () {
-        this.display = (this.element.style.display) ? (this.element.style.display) : ('block');
+        if (this.element.style.display !== 'none') {
+            this.display = (this.element.style.display) ? (this.element.style.display) : ('block');
+        }
         this.element.style.display = 'none';
         return this;
     };
@@ -446,6 +492,12 @@ var FireElement = (function () {
         else {
             return '';
         }
+    };
+    /**
+     * Return the node.
+     */
+    FireElement.prototype.node = function () {
+        return this.element;
     };
     return FireElement;
 }());
