@@ -141,6 +141,19 @@ class FireElements extends Array<FireElement> {
 		});
 		return list;
 	}
+
+	/**
+	 * Find elements in children nodes.
+	 */
+	find(query : string) : FireElements {
+		let list : FireElements = new FireElements();
+		this.forEach(function(el : FireElement){
+			el.find(query).forEach(function(e : FireElement){
+				list.push(e);
+			});
+		});
+		return list;
+	}
 	
 	/**
 	 * Listen a event and execute the callback function when event triggering.
@@ -258,7 +271,7 @@ class FireElements extends Array<FireElement> {
 	/**
 	 *	Get values of form elements.
 	 */
-	val(): string | boolean | any {
+	val() : string | boolean | any {
 		let values = [];
 		this.forEach(function(e: FireElement) {
 			values.push(e.val());
@@ -268,6 +281,17 @@ class FireElements extends Array<FireElement> {
 		} else {
 			return values;
 		}
+	}
+
+	/**
+	 * Return the nodes.
+	 */
+	node() : Array<Node> {
+		let list : Array<Node> = [];
+		this.forEach(function(e: FireElement) {
+			list.push(e.node());
+		});
+		return list;
 	}
 }
 
@@ -366,6 +390,19 @@ class FireElement {
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * Find elements in children nodes.
+	 */
+	find(query : string) : FireElements {
+		let list : FireElements = new FireElements();
+		let that = this;
+		[].forEach.call(this.element.querySelectorAll(query), function(e){
+			let f : FireElement = that.firejs.new(e);
+			list.push(f);
+		});
+		return list;
 	}
 	
 	/**
@@ -496,6 +533,13 @@ class FireElement {
 		} else {
 			return '';
 		}
+	}
+
+	/**
+	 * Return the node.
+	 */
+	node() : Node {
+		return this.element;
 	}
 }
 

@@ -144,6 +144,18 @@ var FireElements = (function (_super) {
         return list;
     };
     /**
+     * Find elements in children nodes.
+     */
+    FireElements.prototype.find = function (query) {
+        var list = new FireElements();
+        this.forEach(function (el) {
+            el.find(query).forEach(function (e) {
+                list.push(e);
+            });
+        });
+        return list;
+    };
+    /**
      * Listen a event and execute the callback function when event triggering.
      */
     FireElements.prototype.on = function (event, callback) {
@@ -260,6 +272,16 @@ var FireElements = (function (_super) {
             return values;
         }
     };
+    /**
+     * Return the nodes.
+     */
+    FireElements.prototype.node = function () {
+        var list = [];
+        this.forEach(function (e) {
+            list.push(e.node());
+        });
+        return list;
+    };
     return FireElements;
 }(Array));
 /**
@@ -335,6 +357,18 @@ var FireElement = (function () {
         else {
             return null;
         }
+    };
+    /**
+     * Find elements in children nodes.
+     */
+    FireElement.prototype.find = function (query) {
+        var list = new FireElements();
+        var that = this;
+        [].forEach.call(this.element.querySelectorAll(query), function (e) {
+            var f = that.firejs.new(e);
+            list.push(f);
+        });
+        return list;
     };
     /**
      * Listen a event and execute the callback function when event triggering.
@@ -458,6 +492,12 @@ var FireElement = (function () {
         else {
             return '';
         }
+    };
+    /**
+     * Return the node.
+     */
+    FireElement.prototype.node = function () {
+        return this.element;
     };
     return FireElement;
 }());
