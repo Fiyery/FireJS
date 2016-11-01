@@ -123,7 +123,7 @@ class FireElements extends Array<FireElement> {
 	/**
 	 * Get the next element.
 	 */
-	next(name : string) : FireElements {
+	next() : FireElements {
 		let list : FireElements = new FireElements();
 		this.forEach(function(e : FireElement){
 			list.push(e.next());
@@ -134,7 +134,7 @@ class FireElements extends Array<FireElement> {
 	/**
 	 * Get the previous element.
 	 */
-	prev(name : string) : FireElements {
+	prev() : FireElements {
 		let list : FireElements = new FireElements();
 		this.forEach(function(e : FireElement){
 			list.push(e.prev());
