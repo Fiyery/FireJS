@@ -126,7 +126,7 @@ var FireElements = (function (_super) {
     /**
      * Get the next element.
      */
-    FireElements.prototype.next = function (name) {
+    FireElements.prototype.next = function () {
         var list = new FireElements();
         this.forEach(function (e) {
             list.push(e.next());
@@ -136,7 +136,7 @@ var FireElements = (function (_super) {
     /**
      * Get the previous element.
      */
-    FireElements.prototype.prev = function (name) {
+    FireElements.prototype.prev = function () {
         var list = new FireElements();
         this.forEach(function (e) {
             list.push(e.prev());
@@ -231,6 +231,37 @@ var FireElements = (function (_super) {
         return this;
     };
     /**
+     * Define CSS properties.
+     */
+    FireElements.prototype.css = function (name, val) {
+        this.forEach(function (e) {
+            e.css(name, val);
+        });
+        return this;
+    };
+    /**
+     * Define or get width element.
+     */
+    FireElements.prototype.width = function (val) {
+        if (val) {
+            this.forEach(function (e) {
+                e.width(val);
+            });
+        }
+        return this[0].width();
+    };
+    /**
+     * Define or get height element.
+     */
+    FireElements.prototype.height = function (val) {
+        if (val) {
+            this.forEach(function (e) {
+                e.height(val);
+            });
+        }
+        return this[0].height();
+    };
+    /**
      * Show the element with its saved display property.
      */
     FireElements.prototype.show = function () {
@@ -299,9 +330,8 @@ var FireElement = (function () {
         this.firejs = firejs;
         this.element = e;
         if (e) {
-            this.css = document.defaultView.getComputedStyle(this.element, null);
             // Need for toggle. 
-            this.element.style.display = this.css.display;
+            this.element.style.display = document.defaultView.getComputedStyle(this.element, null).display;
         }
         var node = this.element;
         node.firejs_id = Date.now().toString() + '-' + Math.random().toString().substring(2, 7);
@@ -327,12 +357,6 @@ var FireElement = (function () {
             list.push(this.firejs.new(e));
         });
         return list;
-    };
-    /**
-     * Get childNodes.
-     */
-    FireElement.prototype.childNodes = function () {
-        return this.element.childNodes;
     };
     /**
      * Get the next element.
@@ -438,6 +462,38 @@ var FireElement = (function () {
             this.element.classList.toggle(name);
         }
         return this;
+    };
+    /**
+     * Define CSS properties.
+     */
+    FireElement.prototype.css = function (name, val) {
+        if (typeof name === 'string') {
+            this.element.style[name] = val;
+        }
+        else if (typeof name === 'object') {
+            [].forEach.call(Object.keys(name), function (key) {
+                this.element.style[key] = name[key];
+            }, this);
+        }
+        return this;
+    };
+    /**
+     * Define or get width element.
+     */
+    FireElement.prototype.width = function (val) {
+        if (val) {
+            this.element.style.width = val + 'px';
+        }
+        return this.element.offsetWidth;
+    };
+    /**
+     * Define or get height element.
+     */
+    FireElement.prototype.height = function (val) {
+        if (val) {
+            this.element.style.height = val + 'px';
+        }
+        return this.element.offsetHeight;
     };
     /**
      * Show the element with its saved display property.
