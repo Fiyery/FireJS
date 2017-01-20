@@ -46,6 +46,9 @@ var FireJs = (function () {
      * Create a FireElement from HTMLElement.
      */
     FireJs.prototype.new = function (e) {
+        if (!e) {
+            return null;
+        }
         var el = e;
         if (el.firejs_id && this.datalist[el.firejs_id]) {
             // If element is known, it was loaded from datalist.

@@ -48,6 +48,9 @@ class FireJs {
 	 * Create a FireElement from HTMLElement.
 	 */
 	new(e : HTMLElement) : FireElement {
+		if (!e) {
+			return null;
+		}
 		let el : any = e;
 		if (el.firejs_id && this.datalist[el.firejs_id]) {
 			// If element is known, it was loaded from datalist.
