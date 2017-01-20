@@ -48,6 +48,9 @@ class FireJs {
 	 * Create a FireElement from HTMLElement.
 	 */
 	new(e : HTMLElement) : FireElement {
+		if (!e || !(e instanceof HTMLElement)) {
+			return null;
+		}
 		let el : any = e;
 		if (el.firejs_id && this.datalist[el.firejs_id]) {
 			// If element is known, it was loaded from datalist.
@@ -76,9 +79,11 @@ class FireElements extends Array<FireElement> {
 	parent() : FireElements {
 		let list : FireElements = new FireElements();
 		this.forEach(function(e : FireElement){
-			list.push(e.parent());
+			if (e.parent()) {
+				list.push(e.parent());
+			}
 		});
-		return list;
+		return (list.length > 0) ? (list) : (null);
 	}
 	
 	/**
