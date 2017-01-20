@@ -46,7 +46,7 @@ var FireJs = (function () {
      * Create a FireElement from HTMLElement.
      */
     FireJs.prototype.new = function (e) {
-        if (!e) {
+        if (!e || !(e instanceof HTMLElement)) {
             return null;
         }
         var el = e;
@@ -80,9 +80,11 @@ var FireElements = (function (_super) {
     FireElements.prototype.parent = function () {
         var list = new FireElements();
         this.forEach(function (e) {
-            list.push(e.parent());
+            if (e.parent()) {
+                list.push(e.parent());
+            }
         });
-        return list;
+        return (list.length > 0) ? (list) : (null);
     };
     /**
      * Get the chidren element.
