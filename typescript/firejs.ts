@@ -237,6 +237,40 @@ class FireElements extends Array<FireElement> {
 		});
 		return this;
 	}
+
+	/**
+	 * Define CSS properties.
+	 */
+	css(name : string|Object, val ?: string) : FireElements {
+		this.forEach(function(e : FireElement){
+			e.css(name, val);
+		});
+		return this;
+	}
+
+	/**
+	 * Define or get width element.
+	 */
+	width(val ?: number) : number {
+		if (val) {
+			this.forEach(function(e : FireElement){
+				e.width(val);
+			});
+		}
+		return this[0].width();
+	}
+
+	/**
+	 * Define or get height element.
+	 */
+	height(val ?: number) : number {
+		if (val) {
+			this.forEach(function(e : FireElement){
+				e.height(val);
+			});
+		}
+		return this[0].height();
+	}
 	
 	/**
 	 * Show the element with its saved display property.
@@ -311,11 +345,6 @@ class FireElement {
 	display : string = 'block';
 
 	/**
-	 * Liste of CSS Stylesheet properties.
-	 */
-	css : any;
-
-	/**
 	 * librairy FireJS Factory for new FireElement.
 	 */
 	firejs : FireJs;
@@ -327,10 +356,8 @@ class FireElement {
 		this.firejs = firejs;
 		this.element = e;
 		if (e) {
-			this.css = document.defaultView.getComputedStyle(this.element, null);
-
 			// Need for toggle. 
-			this.element.style.display = this.css.display;
+			this.element.style.display = document.defaultView.getComputedStyle(this.element, null).display;
 		}
 		let node : any = this.element;
 		node.firejs_id = Date.now().toString()+'-'+Math.random().toString().substring(2, 7);
@@ -359,13 +386,6 @@ class FireElement {
 			list.push(this.firejs.new(e));
 		});
 		return list;
-	}
-
-	/**
-	 * Get childNodes.
-	 */
-	childNodes() : NodeList {
-		return this.element.childNodes;
 	}
 	
 	/**
@@ -479,6 +499,40 @@ class FireElement {
 			this.element.classList.toggle(name);
 		}
 		return this;
+	}
+
+	/**
+	 * Define CSS properties.
+	 */
+	css(name : string|Object, val ?: string) : FireElement {
+		if (typeof name === 'string') {
+			this.element.style[name] = val;
+		} else if (typeof name === 'object') {
+			[].forEach.call(Object.keys(name), function(key){
+				this.element.style[key] = name[key]
+			}, this);
+		}
+		return this;
+	}
+
+	/**
+	 * Define or get width element.
+	 */
+	width(val ?: number) : number {
+		if (val) {
+			this.element.style.width = val + 'px';
+		}
+		return this.element.offsetWidth;
+	}
+
+	/**
+	 * Define or get height element.
+	 */
+	height(val ?: number) : number {
+		if (val) {
+			this.element.style.height = val + 'px';
+		}
+		return this.element.offsetHeight;
 	}
 	
 	/**
