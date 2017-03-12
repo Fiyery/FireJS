@@ -1,8 +1,3 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 'use strict';
 /**
  * Main class.
@@ -66,33 +61,58 @@ var FireJs = (function () {
 /**
  * Array class contains the FireElements and send to then the calls.
  */
-var FireElements = (function (_super) {
-    __extends(FireElements, _super);
+var FireElements = (function () {
     function FireElements() {
-        _super.apply(this, arguments);
+        /**
+         * Container of FireElement.
+         */
+        this.list = [];
     }
+    /**
+     * Get number of elements.
+     */
     FireElements.prototype.size = function () {
-        return this.length;
+        return this.list.length;
+    };
+    /**
+     * Add element to the list.
+     * @param e FireElement
+     */
+    FireElements.prototype.push = function (e) {
+        this.list.push(e);
+        return this;
+    };
+    /**
+     * Walk the lsit of elements with callback.
+     * @param callback Function
+     */
+    FireElements.prototype.each = function (callback) {
+        if (callback && typeof callback === 'function') {
+            this.list.forEach(function (e) {
+                callback(e);
+            });
+        }
+        return this;
     };
     /**
      * Get the parents.
      */
     FireElements.prototype.parent = function () {
         var list = new FireElements();
-        this.forEach(function (e) {
+        this.each(function (e) {
             if (e.parent()) {
                 list.push(e.parent());
             }
         });
-        return (list.length > 0) ? (list) : (null);
+        return (list.size() > 0) ? (list) : (null);
     };
     /**
      * Get the chidren element.
      */
     FireElements.prototype.children = function () {
         var list = new FireElements();
-        this.forEach(function (e) {
-            e.children().forEach(function (child) {
+        this.each(function (e) {
+            e.children().each(function (child) {
                 list.push(child);
             });
         });
@@ -123,7 +143,7 @@ var FireElements = (function (_super) {
             }
         };
         var this_1 = this;
-        for (var i = 0; i < this.length; i++) {
+        for (var i = 0; i < this.size(); i++) {
             _loop_1(i);
         }
         return list;
@@ -133,7 +153,7 @@ var FireElements = (function (_super) {
      */
     FireElements.prototype.next = function () {
         var list = new FireElements();
-        this.forEach(function (e) {
+        this.each(function (e) {
             list.push(e.next());
         });
         return list;
@@ -143,7 +163,7 @@ var FireElements = (function (_super) {
      */
     FireElements.prototype.prev = function () {
         var list = new FireElements();
-        this.forEach(function (e) {
+        this.each(function (e) {
             list.push(e.prev());
         });
         return list;
@@ -153,8 +173,8 @@ var FireElements = (function (_super) {
      */
     FireElements.prototype.find = function (query) {
         var list = new FireElements();
-        this.forEach(function (el) {
-            el.find(query).forEach(function (e) {
+        this.each(function (el) {
+            el.find(query).each(function (e) {
                 list.push(e);
             });
         });
@@ -164,7 +184,7 @@ var FireElements = (function (_super) {
      * Listen a event and execute the callback function when event triggering.
      */
     FireElements.prototype.on = function (event, callback) {
-        this.forEach(function (e) {
+        this.each(function (e) {
             e.on(event, callback);
         });
         return this;
@@ -174,7 +194,7 @@ var FireElements = (function (_super) {
      */
     FireElements.prototype.has = function (name) {
         var bool = true;
-        this.forEach(function (e) {
+        this.each(function (e) {
             bool = bool && e.has(name);
         });
         return bool;
@@ -183,7 +203,7 @@ var FireElements = (function (_super) {
      * Define a attribut and its value.
      */
     FireElements.prototype.set = function (name, value) {
-        this.forEach(function (e) {
+        this.each(function (e) {
             e.set(name, value);
         });
         return this;
@@ -193,7 +213,7 @@ var FireElements = (function (_super) {
      */
     FireElements.prototype.get = function (name) {
         var params = [];
-        this.forEach(function (e) {
+        this.each(function (e) {
             params.push(e.get(name));
         });
         return params;
@@ -203,7 +223,7 @@ var FireElements = (function (_super) {
      */
     FireElements.prototype.hasClass = function (name) {
         var bool = true;
-        this.forEach(function (e) {
+        this.each(function (e) {
             bool = bool && e.hasClass(name);
         });
         return bool;
@@ -212,7 +232,7 @@ var FireElements = (function (_super) {
      * Add the class.
      */
     FireElements.prototype.addClass = function (name) {
-        this.forEach(function (e) {
+        this.each(function (e) {
             e.addClass(name);
         });
         return this;
@@ -221,7 +241,7 @@ var FireElements = (function (_super) {
      * Remove the class.
      */
     FireElements.prototype.removeClass = function (name) {
-        this.forEach(function (e) {
+        this.each(function (e) {
             e.removeClass(name);
         });
         return this;
@@ -230,7 +250,7 @@ var FireElements = (function (_super) {
      * Toggle the class.
      */
     FireElements.prototype.toggleClass = function (name) {
-        this.forEach(function (e) {
+        this.each(function (e) {
             e.toggleClass(name);
         });
         return this;
@@ -239,7 +259,7 @@ var FireElements = (function (_super) {
      * Define CSS properties.
      */
     FireElements.prototype.css = function (name, val) {
-        this.forEach(function (e) {
+        this.each(function (e) {
             e.css(name, val);
         });
         return this;
@@ -249,7 +269,7 @@ var FireElements = (function (_super) {
      */
     FireElements.prototype.width = function (val) {
         if (val) {
-            this.forEach(function (e) {
+            this.each(function (e) {
                 e.width(val);
             });
         }
@@ -260,7 +280,7 @@ var FireElements = (function (_super) {
      */
     FireElements.prototype.height = function (val) {
         if (val) {
-            this.forEach(function (e) {
+            this.each(function (e) {
                 e.height(val);
             });
         }
@@ -270,7 +290,7 @@ var FireElements = (function (_super) {
      * Show the element with its saved display property.
      */
     FireElements.prototype.show = function () {
-        this.forEach(function (e) {
+        this.each(function (e) {
             e.show();
         });
         return this;
@@ -279,7 +299,7 @@ var FireElements = (function (_super) {
      * Hide the element with display egals none.
      */
     FireElements.prototype.hide = function () {
-        this.forEach(function (e) {
+        this.each(function (e) {
             e.hide();
         });
         return this;
@@ -288,7 +308,7 @@ var FireElements = (function (_super) {
      * Toggle the visibility of element.
      */
     FireElements.prototype.toggle = function () {
-        this.forEach(function (e) {
+        this.each(function (e) {
             e.toggle();
         });
         return this;
@@ -298,7 +318,7 @@ var FireElements = (function (_super) {
      */
     FireElements.prototype.val = function () {
         var values = [];
-        this.forEach(function (e) {
+        this.each(function (e) {
             values.push(e.val());
         });
         if (values.length === 1) {
@@ -313,13 +333,13 @@ var FireElements = (function (_super) {
      */
     FireElements.prototype.node = function () {
         var list = [];
-        this.forEach(function (e) {
+        this.each(function (e) {
             list.push(e.node());
         });
         return list;
     };
     return FireElements;
-}(Array));
+}());
 /**
  * Overloading of HTMLElement.
  */

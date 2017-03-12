@@ -5,6 +5,9 @@
  */
 class FireJs {
 	
+	/**
+	 * Liste of already find elements.
+	 */
 	datalist : any;
 
 	/**
@@ -67,23 +70,52 @@ class FireJs {
 /**
  * Array class contains the FireElements and send to then the calls.
  */
-class FireElements extends Array<FireElement> {
+class FireElements {
+	/**
+	 * Container of FireElement.
+	 */
+	list : Array<FireElement> = [];
 	
+	/**
+	 * Get number of elements.
+	 */
 	size() : number {
-		return this.length;
-	}	
+		return this.list.length;
+	}
+
+	/**
+	 * Add element to the list.
+	 * @param e FireElement
+	 */
+	push(e : FireElement) : FireElements {
+		this.list.push(e);
+		return this;
+	}
+
+	/**
+	 * Walk the lsit of elements with callback.
+	 * @param callback Function
+	 */
+	each(callback) : FireElements {
+		if (callback && typeof callback === 'function') {
+			this.list.forEach((e) => {
+				callback(e);
+			});			
+		}
+		return this;
+	}
 	
 	/**
 	 * Get the parents.
 	 */
 	parent() : FireElements {
 		let list : FireElements = new FireElements();
-		this.forEach(function(e : FireElement){
+		this.each(function(e : FireElement){
 			if (e.parent()) {
 				list.push(e.parent());
 			}
 		});
-		return (list.length > 0) ? (list) : (null);
+		return (list.size() > 0) ? (list) : (null);
 	}
 	
 	/**
@@ -91,8 +123,8 @@ class FireElements extends Array<FireElement> {
 	 */
 	children() : FireElements {
 		let list : FireElements = new FireElements();
-		this.forEach(function(e : FireElement){
-			e.children().forEach(function(child){
+		this.each(function(e : FireElement){
+			e.children().each(function(child){
 				list.push(child);
 			});
 		});
@@ -104,7 +136,7 @@ class FireElements extends Array<FireElement> {
 	 */
 	not(elements) : FireElements {
 		let list : FireElements = new FireElements();
-		for (let i = 0; i < this.length; i++) {
+		for (let i = 0; i < this.size(); i++) {
 			let e = this[i];
 			if (elements.element) {
 				if (elements.element !== e.element) {
@@ -130,7 +162,7 @@ class FireElements extends Array<FireElement> {
 	 */
 	next() : FireElements {
 		let list : FireElements = new FireElements();
-		this.forEach(function(e : FireElement){
+		this.each(function(e : FireElement){
 			list.push(e.next());
 		});
 		return list;
@@ -141,7 +173,7 @@ class FireElements extends Array<FireElement> {
 	 */
 	prev() : FireElements {
 		let list : FireElements = new FireElements();
-		this.forEach(function(e : FireElement){
+		this.each(function(e : FireElement){
 			list.push(e.prev());
 		});
 		return list;
@@ -152,8 +184,8 @@ class FireElements extends Array<FireElement> {
 	 */
 	find(query : string) : FireElements {
 		let list : FireElements = new FireElements();
-		this.forEach(function(el : FireElement){
-			el.find(query).forEach(function(e : FireElement){
+		this.each(function(el : FireElement){
+			el.find(query).each(function(e : FireElement){
 				list.push(e);
 			});
 		});
@@ -164,7 +196,7 @@ class FireElements extends Array<FireElement> {
 	 * Listen a event and execute the callback function when event triggering.
 	 */
 	on(event : string, callback) : FireElements  {
-		this.forEach(function(e : FireElement){
+		this.each(function(e : FireElement){
 			e.on(event, callback);
 		});
 		return this;
@@ -175,7 +207,7 @@ class FireElements extends Array<FireElement> {
 	 */
 	has(name : string) : boolean {
 		let bool : boolean = true;
-		this.forEach(function(e : FireElement){
+		this.each(function(e : FireElement){
 			bool = bool && e.has(name);
 		});
 		return bool;
@@ -185,7 +217,7 @@ class FireElements extends Array<FireElement> {
 	 * Define a attribut and its value.
 	 */
 	set(name : string, value : string) : FireElements {
-		this.forEach(function(e : FireElement){
+		this.each(function(e : FireElement){
 			e.set(name, value);
 		});
 		return this;
@@ -196,7 +228,7 @@ class FireElements extends Array<FireElement> {
 	 */
 	get(name : string) : String[] {
 		let params : String[] = [];
-		this.forEach(function(e : FireElement){
+		this.each(function(e : FireElement){
 			params.push(e.get(name));
 		});
 		return params;
@@ -207,7 +239,7 @@ class FireElements extends Array<FireElement> {
 	 */
 	hasClass(name : string) : boolean {
 		let bool : boolean = true;
-		this.forEach(function(e : FireElement){
+		this.each(function(e : FireElement){
 			bool = bool && e.hasClass(name);
 		});
 		return bool;
@@ -217,7 +249,7 @@ class FireElements extends Array<FireElement> {
 	 * Add the class.
 	 */
 	addClass(name : string) : FireElements {
-		this.forEach(function(e : FireElement){
+		this.each(function(e : FireElement){
 			e.addClass(name);
 		});
 		return this;
@@ -227,7 +259,7 @@ class FireElements extends Array<FireElement> {
 	 * Remove the class.
 	 */
 	removeClass(name : string) : FireElements {
-		this.forEach(function(e : FireElement){
+		this.each(function(e : FireElement){
 			e.removeClass(name);
 		});
 		return this;
@@ -237,7 +269,7 @@ class FireElements extends Array<FireElement> {
 	 * Toggle the class.
 	 */
 	toggleClass(name : string) : FireElements {
-		this.forEach(function(e : FireElement){
+		this.each(function(e : FireElement){
 			e.toggleClass(name);
 		});
 		return this;
@@ -247,7 +279,7 @@ class FireElements extends Array<FireElement> {
 	 * Define CSS properties.
 	 */
 	css(name : string|Object, val ?: string) : FireElements {
-		this.forEach(function(e : FireElement){
+		this.each(function(e : FireElement){
 			e.css(name, val);
 		});
 		return this;
@@ -258,7 +290,7 @@ class FireElements extends Array<FireElement> {
 	 */
 	width(val ?: number) : number {
 		if (val) {
-			this.forEach(function(e : FireElement){
+			this.each(function(e : FireElement){
 				e.width(val);
 			});
 		}
@@ -270,7 +302,7 @@ class FireElements extends Array<FireElement> {
 	 */
 	height(val ?: number) : number {
 		if (val) {
-			this.forEach(function(e : FireElement){
+			this.each(function(e : FireElement){
 				e.height(val);
 			});
 		}
@@ -281,7 +313,7 @@ class FireElements extends Array<FireElement> {
 	 * Show the element with its saved display property.
 	 */
 	show() : FireElements {
-		this.forEach(function(e : FireElement){
+		this.each(function(e : FireElement){
 			e.show();
 		});
 		return this;
@@ -291,7 +323,7 @@ class FireElements extends Array<FireElement> {
 	 * Hide the element with display egals none.
 	 */
 	hide() : FireElements {
-		this.forEach(function(e : FireElement){
+		this.each(function(e : FireElement){
 			e.hide();
 		});
 		return this;
@@ -301,7 +333,7 @@ class FireElements extends Array<FireElement> {
 	 * Toggle the visibility of element.
 	 */
 	toggle() : FireElements {
-		this.forEach(function(e : FireElement){ 
+		this.each(function(e : FireElement){ 
 			e.toggle();
 		});
 		return this;
@@ -312,7 +344,7 @@ class FireElements extends Array<FireElement> {
 	 */
 	val() : string | boolean | any {
 		let values = [];
-		this.forEach(function(e: FireElement) {
+		this.each(function(e: FireElement) {
 			values.push(e.val());
 		});
 		if (values.length === 1) {
@@ -327,7 +359,7 @@ class FireElements extends Array<FireElement> {
 	 */
 	node() : Array<Node> {
 		let list : Array<Node> = [];
-		this.forEach(function(e: FireElement) {
+		this.each(function(e: FireElement) {
 			list.push(e.node());
 		});
 		return list;
