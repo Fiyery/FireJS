@@ -34,7 +34,6 @@ class FireJs {
 		let list : FireElements = new FireElements();
 		switch (res.length) {
 			case 0 : 
-				list = null;
 				break;
 			case 1 : 
 				list.push(this.new(res[0]));
