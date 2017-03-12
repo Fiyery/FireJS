@@ -468,7 +468,9 @@ class FireElement {
 		if (callback && typeof callback === 'function') {
 			let that = this;
 			this.element.addEventListener(event, function(event) {
-				callback.call(that, event);
+				if (callback.call(that, event) === false) {
+					event.preventDefault();
+				}
 			});
 		}
 		return this;
