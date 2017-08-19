@@ -194,11 +194,25 @@ class FireElements {
 	/**
 	 * Add element at the end.
 	 * @param e FireElement
+	 * @return FireElements
 	 */
 	append(e) {
 		this.each(function(el){
 			el.append(e);
 		});
+		return this;
+	}
+
+	/**
+	 * Set Text element.
+	 * @param string string
+	 * @return FireElements
+	 */
+	text(string) {
+		this.each(function(e){
+			e.text(string);
+		});
+		return this;
 	}
 
 	/**
@@ -504,9 +518,21 @@ class FireElement {
 	/**
 	 * Add element at the end.
 	 * @param e FireElement
+	 * @return FireElements
 	 */
 	append(e) {
 		this.node().appendChild(e.node());
+		return this;
+	}
+
+	/**
+	 * Set Text element.
+	 * @param string string
+	 * @return FireElements
+	 */
+	text(string) {
+		this.node().textContent = string;
+		return this;
 	}
 	
 	/**
