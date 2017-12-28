@@ -435,10 +435,10 @@ class FireElements {
 	 * Get values of form elements.
 	 * @return string
 	 */
-	val() {
+	val(data) {
 		let values = [];
 		this.each(function(e) {
-			values.push(e.val());
+			values.push(e.val(data));
 		});
 		if (values.length === 1) {
 			return values[0];
@@ -740,24 +740,25 @@ class FireElement {
 	}
 
 	/**
-	 *	Get values of form elements.
+	 * Get values of form elements.
 	 * @return string
 	 */
-	val() {
-		let el;
-		if (this.attr("id") === null) {
-			let id = Math.random().toString();
-			this.attr("id", id);
-			el = document.getElementById(id);
-			this.attr("id", null);
-		} else {
-			console.log("ko");
-			el = document.getElementById(this.get("id"));
-		}
-		if (el.type && el.type.toLowerCase() === "checkbox") {
-			return el.checked;
-		} else if (el.value) {
-			return el.value;
+	val(data) {
+		if (this.element.type && this.element.type.toLowerCase() === "checkbox") {
+			if (typeof data !== "undefined") {
+				this.element.checked = data;
+			}
+			return this.element.checked;
+		} else if (this.element.type && this.element.type.toLowerCase() === "radio") {
+			if (typeof data !== "undefined") {
+				this.element.checked = (this.element.value == data);
+			}
+			return this.element.value;
+		} else if (typeof this.element.value !== "undefined") {
+			if (typeof data !== "undefined") {
+				this.element.value = data;
+			}
+			return this.element.value;
 		} else {
 			return "";
 		}
