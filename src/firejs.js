@@ -456,6 +456,9 @@ class FireElements {
 		this.each(function(e) {
 			list.push(e.node());
 		});
+		if (list.length === 1) {
+			return list[0];
+		}
 		return list;
 	}
 }
@@ -477,12 +480,12 @@ class FireElement {
 		this.firejs = firejs;
 
         // Save the display property for hide and show methods.
-        this.display = "block";
-
-		if (e) {
-			// Need for toggle. 
-			this.element.style.display = document.defaultView.getComputedStyle(this.element, null).display;
+		this.display = document.defaultView.getComputedStyle(this.element, null).display.toLowerCase();
+		this.display_show = true;
+		if (this.display === "none") {
+			this.display_show = false;
 		}
+		
 		let node = this.element;
 		node.firejs_id = Date.now().toString()+"-"+Math.random().toString().substring(2, 7);
 	}
@@ -710,7 +713,12 @@ class FireElement {
 	 * @return FireElement
 	 */
 	show() {
-		this.element.style.display = this.display;
+		if (this.display === "none") {
+			this.element.style.display = "block";
+		} else {
+			this.element.style.display = "";
+		}
+		this.display_show = true;
 		return this;
 	} 
 	
@@ -719,10 +727,8 @@ class FireElement {
 	 * @return FireElement
 	 */
 	hide() {
-		if (this.element.style.display !== "none") {
-			this.display = (this.element.style.display) ? (this.element.style.display) : ("block");
-		}
 		this.element.style.display = "none";
+		this.display_show = false;
 		return this;
 	}
 	
@@ -731,10 +737,10 @@ class FireElement {
 	 * @return FireElement
 	 */
 	toggle() {
-		if (this.element.style.display === "none") {
-			this.show();
-		} else {
+		if (this.display_show) {
 			this.hide();
+		} else {
+			this.show();
 		}
 		return this;
 	}
