@@ -779,4 +779,4 @@ class FireElement {
 	}
 }
 
-var Fire = new FireJS();
+var fire = new FireJS();
