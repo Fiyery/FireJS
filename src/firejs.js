@@ -184,8 +184,8 @@ class FireElements {
 	children() {
 		let list = new FireElements();
 		this.each(function(e){
-			e.children().each(function(child){
-				list.push(child);
+			e.children().each(function(){
+				list.push(this);
 			});
 		});
 		return list;
@@ -540,8 +540,9 @@ class FireElement {
 	 */
 	children() {
 		let list = new FireElements();
-		[].forEach.call(this.getProperty("children"), function(e){
-			list.push(this.firejs.new(e));
+		let that = this;
+		[].forEach.call(that.getProperty("children"), function(e){
+			list.push(that.firejs.new(e));
 		});
 		return list;
 	}
@@ -600,7 +601,7 @@ class FireElement {
 	find(query) {
 		let list = new FireElements();
 		let that = this;
-		[].forEach.call(this.element.querySelectorAll(query), function(e){
+		[].forEach.call(that.element.querySelectorAll(query), function(e){
 			let f = that.firejs.new(e);
 			list.push(f);
 		});
