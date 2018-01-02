@@ -461,6 +461,34 @@ class FireElements {
 		}
 		return list;
 	}
+
+	/**
+	 * Return the specifique element with its index.
+	 * @param number index 
+	 * @return FireElement 
+	 */
+	eq(index) {
+		if (index < 0) {
+			index = this.list.length + (index - 1);
+		}
+		return this.list[index];
+	}
+
+	/**
+	 * Return the first element.
+	 * @return FireElement 
+	 */
+	first() {
+		return this.list[0];
+	}
+
+	/**
+	 * Return the last element.
+	 * @return FireElement 
+	 */
+	last() {
+		return this.list[this.list.length - 1];
+	}
 }
 
 /**
