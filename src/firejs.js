@@ -463,6 +463,19 @@ class FireElements {
 	}
 
 	/**
+	 * Get contents of the first element.
+	 * @return string
+	 */
+	html(content) {
+		if (typeof content !== "undefined") {
+			this.each(function(e) {
+				e.html(content);
+			});
+		}
+		return this.list[0].html();
+	}
+
+	/**
 	 * Return the specifique element with its index.
 	 * @param number index 
 	 * @return FireElement 
@@ -797,6 +810,17 @@ class FireElement {
 		} else {
 			return "";
 		}
+	}
+
+	/**
+	 * Get contents of the element.
+	 * @return string
+	 */
+	html(content) {
+		if (typeof content !== "undefined") {
+			this.element.innerHTML = content;
+		}
+		return this.element.innerHTML;
 	}
 
 	/**
