@@ -436,15 +436,13 @@ class FireElements {
 	 * @return string
 	 */
 	val(data) {
-		let values = [];
 		this.each(function(e) {
-			values.push(e.val(data));
+			e.val(data);
 		});
-		if (values.length === 1) {
-			return values[0];
-		} else {
-			return values;
+		if (this.list[0]) {
+			return this.list[0].val();
 		}
+		return undefined;
 	}
 
 	/**
@@ -472,7 +470,10 @@ class FireElements {
 				e.html(content);
 			});
 		}
-		return this.list[0].html();
+		if (this.list[0]) {
+			return this.list[0].html();
+		}
+		return undefined;
 	}
 
 	/**
@@ -808,7 +809,7 @@ class FireElement {
 			}
 			return this.element.value;
 		} else {
-			return "";
+			return undefined;
 		}
 	}
 
