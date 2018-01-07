@@ -73,7 +73,7 @@ class FireJS {
 	 * @param string name Tag HTML
 	 */
 	create(name) {
-		return Fire.new(document.createElement(name));
+		return this.new(document.createElement(name));
 	}
 
 	/**
