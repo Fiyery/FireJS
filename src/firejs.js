@@ -73,7 +73,7 @@ class FireJS {
 	 * @param string name Tag HTML
 	 */
 	create(name) {
-		return Fire.new(document.createElement(name));
+		return this.new(document.createElement(name));
 	}
 
 	/**
@@ -436,15 +436,13 @@ class FireElements {
 	 * @return string
 	 */
 	val(data) {
-		let values = [];
 		this.each(function(e) {
-			values.push(e.val(data));
+			e.val(data);
 		});
-		if (values.length === 1) {
-			return values[0];
-		} else {
-			return values;
+		if (this.list[0]) {
+			return this.list[0].val();
 		}
+		return undefined;
 	}
 
 	/**
@@ -460,6 +458,22 @@ class FireElements {
 			return list[0];
 		}
 		return list;
+	}
+
+	/**
+	 * Get contents of the first element.
+	 * @return string
+	 */
+	html(content) {
+		if (typeof content !== "undefined") {
+			this.each(function(e) {
+				e.html(content);
+			});
+		}
+		if (this.list[0]) {
+			return this.list[0].html();
+		}
+		return undefined;
 	}
 
 	/**
@@ -795,8 +809,19 @@ class FireElement {
 			}
 			return this.element.value;
 		} else {
-			return "";
+			return undefined;
 		}
+	}
+
+	/**
+	 * Get contents of the element.
+	 * @return string
+	 */
+	html(content) {
+		if (typeof content !== "undefined") {
+			this.element.innerHTML = content;
+		}
+		return this.element.innerHTML;
 	}
 
 	/**
