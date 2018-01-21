@@ -63,7 +63,7 @@ class FireJS {
 		} else {
 			let f = new FireElement(e, this);
 			// Add to datalist elements.
-			this.datalist[f.getProperty("firejs_id")] = f;
+			this.datalist[f.prop("firejs_id")] = f;
 			return f;
 		}
 	}
@@ -223,14 +223,14 @@ class FireElements {
 	not(elements) {
 		let list = new FireElements();
 		for (let i = 0; i < this.size(); i++) {
-			let e = this[i];
+			let e = this.eq(i);
 			if (elements.element) {
 				if (elements.element !== e.element) {
 					list.push(e);
 				}
 			} else {
 				let find = false;
-				elements.forEach(function(el){
+				elements.each(function(el){
 					if (el.element === e.element) {
 						find = true;
 					}
@@ -350,11 +350,30 @@ class FireElements {
 	 * @param value string
 	 * @return FireElements
 	 */
+	prop(name, value) {
+		if (typeof value !== "undefined") {
+			this.each(function(e){
+				e.prop(name, value);
+			});
+			return this;
+		}
+		return this.eq(0).prop(name);
+	}
+
+	/**
+	 * Setter/getter of attribut the class.
+	 * @param name string
+	 * @param value string
+	 * @return FireElements
+	 */
 	attr(name, value) {
-		this.each(function(e){
-			e.attr(name, value);
-		});
-		return this;
+		if (typeof value !== "undefined") {
+			this.each(function(e){
+				e.attr(name, value);
+			});
+			return this;
+		}
+		return this.eq(0).attr(name);
 	}
 
 	/**
@@ -364,10 +383,13 @@ class FireElements {
 	 * @return FireElements
 	 */
 	css(name, value) {
-		this.each(function(e){
-			e.css(name, value);
-		});
-		return this;
+		if (typeof value !== "undefined") {
+			this.each(function(e){
+				e.css(name, value);
+			});
+			return this;
+		}
+		return this.eq(0).css(name);
 	}
 
 	/**
@@ -381,7 +403,7 @@ class FireElements {
 				e.width(value);
 			});
 		}
-		return this[0].width();
+		return this.eq(0).width();
 	}
 
 	/**
@@ -395,7 +417,7 @@ class FireElements {
 				e.height(value);
 			});
 		}
-		return this[0].height();
+		return this.eq(0).height();
 	}
 	
 	/**
@@ -436,13 +458,16 @@ class FireElements {
 	 * @return string
 	 */
 	val(data) {
-		this.each(function(e) {
-			e.val(data);
-		});
-		if (this.list[0]) {
-			return this.list[0].val();
+		if (typeof data !== "undefined") {
+			this.each(function(e) {
+				e.val(data);
+			});
+			return this;
 		}
-		return undefined;
+		if (this.eq(0)) {
+			return this.eq(0).val();
+		}
+		return null;
 	}
 
 	/**
@@ -469,11 +494,12 @@ class FireElements {
 			this.each(function(e) {
 				e.html(content);
 			});
+			return this;
 		}
-		if (this.list[0]) {
-			return this.list[0].html();
+		if (this.eq(0)) {
+			return this.eq(0).html();
 		}
-		return undefined;
+		return null;
 	}
 
 	/**
@@ -536,7 +562,15 @@ class FireElement {
 	 * Get the property of HTMLElement.
 	 * @param name string
 	 */
-	getProperty(name) {
+	prop(name, value) {
+		if (typeof value !== "undefined") {
+			if (value === null) {
+				this.element[name] = null;
+			} else {
+				this.element[name] = value;
+			}
+			return this;
+		}
 		return this.element[name];
 	}
 	
@@ -545,7 +579,7 @@ class FireElement {
 	 * @return FireElement
 	 */
 	parent() {
-		return this.firejs.new(this.getProperty("parentNode"));
+		return this.firejs.new(this.prop("parentNode"));
 	}
 	
 	/**
@@ -555,7 +589,7 @@ class FireElement {
 	children() {
 		let list = new FireElements();
 		let that = this;
-		[].forEach.call(that.getProperty("children"), function(e){
+		[].forEach.call(that.prop("children"), function(e){
 			list.push(that.firejs.new(e));
 		});
 		return list;
@@ -586,7 +620,7 @@ class FireElement {
 	 * @return FireElement
 	 */
 	next() {
-		let el = this.getProperty("nextElementSibling");
+		let el = this.prop("nextElementSibling");
 		if (el) {
 			return this.firejs.new(el);
 		} else {
@@ -599,7 +633,7 @@ class FireElement {
 	 * @return FireElement
 	 */
 	prev() {
-		let el = this.getProperty("previousElementSibling");
+		let el = this.prop("previousElementSibling");
 		if (el) {
 			return this.firejs.new(el);
 		} else {
@@ -653,6 +687,7 @@ class FireElement {
 			} else {
 				this.element.setAttribute(name, value);
 			}
+			return this;
 		}
 		return this.element.getAttribute(name);
 	}
@@ -809,7 +844,7 @@ class FireElement {
 			}
 			return this.element.value;
 		} else {
-			return undefined;
+			return null;
 		}
 	}
 
