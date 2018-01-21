@@ -223,7 +223,7 @@ class FireElements {
 	not(elements) {
 		let list = new FireElements();
 		for (let i = 0; i < this.size(); i++) {
-			let e = this[i];
+			let e = this.eq(i);
 			if (elements.element) {
 				if (elements.element !== e.element) {
 					list.push(e);
@@ -351,10 +351,13 @@ class FireElements {
 	 * @return FireElements
 	 */
 	attr(name, value) {
-		this.each(function(e){
-			e.attr(name, value);
-		});
-		return this;
+		if (typeof value !== "undefined") {
+			this.each(function(e){
+				e.attr(name, value);
+			});
+			return this;
+		}
+		return this.eq(0).attr(name);
 	}
 
 	/**
@@ -364,10 +367,13 @@ class FireElements {
 	 * @return FireElements
 	 */
 	css(name, value) {
-		this.each(function(e){
-			e.css(name, value);
-		});
-		return this;
+		if (typeof value !== "undefined") {
+			this.each(function(e){
+				e.css(name, value);
+			});
+			return this;
+		}
+		return this.eq(0).css(name);
 	}
 
 	/**
@@ -381,7 +387,7 @@ class FireElements {
 				e.width(value);
 			});
 		}
-		return this[0].width();
+		return this.eq(0).width();
 	}
 
 	/**
@@ -395,7 +401,7 @@ class FireElements {
 				e.height(value);
 			});
 		}
-		return this[0].height();
+		return this.eq(0).height();
 	}
 	
 	/**
@@ -436,13 +442,16 @@ class FireElements {
 	 * @return string
 	 */
 	val(data) {
-		this.each(function(e) {
-			e.val(data);
-		});
-		if (this.list[0]) {
-			return this.list[0].val();
+		if (typeof data !== "undefined") {
+			this.each(function(e) {
+				e.val(data);
+			});
+			return this;
 		}
-		return undefined;
+		if (this.eq(0)) {
+			return this.eq(0).val();
+		}
+		return null;
 	}
 
 	/**
@@ -469,11 +478,12 @@ class FireElements {
 			this.each(function(e) {
 				e.html(content);
 			});
+			return this;
 		}
-		if (this.list[0]) {
-			return this.list[0].html();
+		if (this.eq(0)) {
+			return this.eq(0).html();
 		}
-		return undefined;
+		return null;
 	}
 
 	/**
@@ -653,6 +663,7 @@ class FireElement {
 			} else {
 				this.element.setAttribute(name, value);
 			}
+			return this;
 		}
 		return this.element.getAttribute(name);
 	}
@@ -809,7 +820,7 @@ class FireElement {
 			}
 			return this.element.value;
 		} else {
-			return undefined;
+			return null;
 		}
 	}
 
