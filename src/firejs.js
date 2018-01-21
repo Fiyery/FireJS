@@ -281,6 +281,18 @@ class FireElements {
 		});
 		return list;
 	}
+
+	/**
+	 * Trigger a event.
+	 * @param event string
+	 * @param FireElements 
+	 */
+	trigger(event) {
+		this.each(function(e){
+			e.trigger(event);
+		});
+		return this;
+	}
 	
 	/**
 	 * Listen a event and execute the callback function when event triggering.
@@ -554,8 +566,7 @@ class FireElement {
 			this.display_show = false;
 		}
 		
-		let node = this.element;
-		node.firejs_id = Date.now().toString()+"-"+Math.random().toString().substring(2, 7);
+		this.element.firejs_id = Date.now().toString()+"-"+Math.random().toString().substring(2, 7);
 	}
 	
 	/**
@@ -565,13 +576,13 @@ class FireElement {
 	prop(name, value) {
 		if (typeof value !== "undefined") {
 			if (value === null) {
-				this.element[name] = null;
+				this.node()[name] = null;
 			} else {
-				this.element[name] = value;
+				this.node()[name] = value;
 			}
 			return this;
 		}
-		return this.element[name];
+		return this.node()[name];
 	}
 	
 	/**
@@ -655,6 +666,27 @@ class FireElement {
 		});
 		return list;
 	}
+
+	/**
+	 * Trigger a event.
+	 * @param event string
+	 * @param FireElements 
+	 */
+	trigger(event) {
+		if (typeof this.prop(event) === "function") {
+			this.prop(event).call(this.node());
+		} else {
+			let object = null;
+			if (typeof CustomEvent !== "undefined") {
+				object = new CustomEvent(event, {bubbles: true, cancelable: true});
+			} else {
+				object = document.createEvent('Event');
+				object.initEvent(event, true, true);
+			}
+			this.node().dispatchEvent(object);
+		} 
+		return this;
+	}
 	
 	/**
 	 * Listen a event and execute the callback function when event triggering.
@@ -665,7 +697,7 @@ class FireElement {
 	on(event, callback) {
 		if (callback && typeof callback === "function") {
 			let context = this;
-			this.element.addEventListener(event, function(event) {
+			this.node().addEventListener(event, function(event) {
 				if (callback.call(context, event, context) === false) {
 					event.preventDefault();
 				}
@@ -683,13 +715,13 @@ class FireElement {
 	attr(name, value) {
 		if (typeof value !== "undefined") {
 			if (value === null) {
-				this.element.removeAttribute(name);
+				this.node().removeAttribute(name);
 			} else {
-				this.element.setAttribute(name, value);
+				this.node().setAttribute(name, value);
 			}
 			return this;
 		}
-		return this.element.getAttribute(name);
+		return this.node().getAttribute(name);
 	}
 	
 	/**
@@ -698,7 +730,7 @@ class FireElement {
 	 * @return FireElement
 	 */
 	get(name) {
-		return this.element.getAttribute(name);
+		return this.node().getAttribute(name);
 	}
 	
 	/**
@@ -707,7 +739,7 @@ class FireElement {
 	 * @return boolean
 	 */
 	hasClass(name) {
-		return this.element.classList.contains(name);
+		return this.node().classList.contains(name);
 	}
 	
 	/**
@@ -717,7 +749,7 @@ class FireElement {
 	 */
 	addClass(name) {
 		if (name) {
-			this.element.classList.add(name);
+			this.node().classList.add(name);
 		}
 		return this;
 	}
@@ -729,7 +761,7 @@ class FireElement {
 	 */
 	removeClass(name) {
 		if (name) {
-			this.element.classList.remove(name);
+			this.node().classList.remove(name);
 		}
 		return this;
 	}
@@ -741,7 +773,7 @@ class FireElement {
 	 */
 	toggleClass(name) {
 		if (name) {
-			this.element.classList.toggle(name);
+			this.node().classList.toggle(name);
 		}
 		return this;
 	}
@@ -753,10 +785,10 @@ class FireElement {
 	 */
 	css(name, value) {
 		if (typeof name === "string") {
-			this.element.style[name] = value;
+			this.node().style[name] = value;
 		} else if (typeof name === "object") {
 			[].forEach.call(Object.keys(name), function(key){
-				this.element.style[key] = name[key]
+				this.node().style[key] = name[key]
 			}, this);
 		}
 		return this;
@@ -769,9 +801,9 @@ class FireElement {
 	 */
 	width(value) {
 		if (value) {
-			this.element.style.width = value + "px";
+			this.node().style.width = value + "px";
 		}
-		return this.element.offsetWidth;
+		return this.node().offsetWidth;
 	}
 
 	/**
@@ -781,9 +813,9 @@ class FireElement {
 	 */
 	height(value) {
 		if (value) {
-			this.element.style.height = value + "px";
+			this.node().style.height = value + "px";
 		}
-		return this.element.offsetHeight;
+		return this.node().offsetHeight;
 	}
 	
 	/**
@@ -792,9 +824,9 @@ class FireElement {
 	 */
 	show() {
 		if (this.display === "none") {
-			this.element.style.display = "block";
+			this.node().style.display = "block";
 		} else {
-			this.element.style.display = "";
+			this.node().style.display = "";
 		}
 		this.display_show = true;
 		return this;
@@ -805,7 +837,7 @@ class FireElement {
 	 * @return FireElement
 	 */
 	hide() {
-		this.element.style.display = "none";
+		this.node().style.display = "none";
 		this.display_show = false;
 		return this;
 	}
@@ -828,21 +860,21 @@ class FireElement {
 	 * @return string
 	 */
 	val(data) {
-		if (this.element.type && this.element.type.toLowerCase() === "checkbox") {
+		if (this.node().type && this.node().type.toLowerCase() === "checkbox") {
 			if (typeof data !== "undefined") {
-				this.element.checked = data;
+				this.node().checked = data;
 			}
-			return this.element.checked;
-		} else if (this.element.type && this.element.type.toLowerCase() === "radio") {
+			return this.node().checked;
+		} else if (this.node().type && this.node().type.toLowerCase() === "radio") {
 			if (typeof data !== "undefined") {
-				this.element.checked = (this.element.value == data);
+				this.node().checked = (this.node().value == data);
 			}
-			return this.element.value;
-		} else if (typeof this.element.value !== "undefined") {
+			return this.node().value;
+		} else if (typeof this.node().value !== "undefined") {
 			if (typeof data !== "undefined") {
-				this.element.value = data;
+				this.node().value = data;
 			}
-			return this.element.value;
+			return this.node().value;
 		} else {
 			return null;
 		}
@@ -854,9 +886,9 @@ class FireElement {
 	 */
 	html(content) {
 		if (typeof content !== "undefined") {
-			this.element.innerHTML = content;
+			this.node().innerHTML = content;
 		}
-		return this.element.innerHTML;
+		return this.node().innerHTML;
 	}
 
 	/**
