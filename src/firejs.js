@@ -63,7 +63,7 @@ class FireJS {
 		} else {
 			let f = new FireElement(e, this);
 			// Add to datalist elements.
-			this.datalist[f.getProperty("firejs_id")] = f;
+			this.datalist[f.prop("firejs_id")] = f;
 			return f;
 		}
 	}
@@ -230,7 +230,7 @@ class FireElements {
 				}
 			} else {
 				let find = false;
-				elements.forEach(function(el){
+				elements.each(function(el){
 					if (el.element === e.element) {
 						find = true;
 					}
@@ -342,6 +342,22 @@ class FireElements {
 			e.toggleClass(name);
 		});
 		return this;
+	}
+
+	/**
+	 * Setter/getter of attribut the class.
+	 * @param name string
+	 * @param value string
+	 * @return FireElements
+	 */
+	prop(name, value) {
+		if (typeof value !== "undefined") {
+			this.each(function(e){
+				e.prop(name, value);
+			});
+			return this;
+		}
+		return this.eq(0).prop(name);
 	}
 
 	/**
@@ -546,7 +562,15 @@ class FireElement {
 	 * Get the property of HTMLElement.
 	 * @param name string
 	 */
-	getProperty(name) {
+	prop(name, value) {
+		if (typeof value !== "undefined") {
+			if (value === null) {
+				this.element[name] = null;
+			} else {
+				this.element[name] = value;
+			}
+			return this;
+		}
 		return this.element[name];
 	}
 	
@@ -555,7 +579,7 @@ class FireElement {
 	 * @return FireElement
 	 */
 	parent() {
-		return this.firejs.new(this.getProperty("parentNode"));
+		return this.firejs.new(this.prop("parentNode"));
 	}
 	
 	/**
@@ -565,7 +589,7 @@ class FireElement {
 	children() {
 		let list = new FireElements();
 		let that = this;
-		[].forEach.call(that.getProperty("children"), function(e){
+		[].forEach.call(that.prop("children"), function(e){
 			list.push(that.firejs.new(e));
 		});
 		return list;
@@ -596,7 +620,7 @@ class FireElement {
 	 * @return FireElement
 	 */
 	next() {
-		let el = this.getProperty("nextElementSibling");
+		let el = this.prop("nextElementSibling");
 		if (el) {
 			return this.firejs.new(el);
 		} else {
@@ -609,7 +633,7 @@ class FireElement {
 	 * @return FireElement
 	 */
 	prev() {
-		let el = this.getProperty("previousElementSibling");
+		let el = this.prop("previousElementSibling");
 		if (el) {
 			return this.firejs.new(el);
 		} else {
