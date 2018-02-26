@@ -431,6 +431,14 @@ class FireElements {
 		}
 		return this.eq(0).height();
 	}
+
+	/**
+	 * Get offset for top and left element in the page.
+	 * @return object {left, top}
+	 */
+	offset() {
+		return this.eq(0).offset();
+	}
 	
 	/**
 	 * Show the element with its saved display property.
@@ -816,6 +824,18 @@ class FireElement {
 			this.node().style.height = value + "px";
 		}
 		return this.node().offsetHeight;
+	}
+
+	/**
+	 * Get offset for top and left element in the page.
+	 * @return object {left, top}
+	 */
+	offset() {
+		var rect = this.node().getBoundingClientRect();
+        return {
+            top: rect.top + document.body.scrollTop,
+            left: rect.left + document.body.scrollLeft
+        }
 	}
 	
 	/**
