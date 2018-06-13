@@ -210,9 +210,13 @@ class FireElements {
 	 */
 	append(e) {
 		this.each(function(el){
-			e.each(function(e){
+			if (e.each) {
+				e.each(function(e){
+					el.append(e);
+				});
+			} else {
 				el.append(e);
-			})
+			}
 		});
 		return this;
 	}
@@ -224,9 +228,13 @@ class FireElements {
 	 */
 	prepend(e) {
 		this.each(function(el){
-			e.each(function(e){
+			if (e.each) {
+				e.each(function(e){
+					el.prepend(e);
+				});
+			} else {
 				el.prepend(e);
-			})
+			}
 		});
 		return this;
 	}
