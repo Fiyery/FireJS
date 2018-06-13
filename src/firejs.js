@@ -178,7 +178,7 @@ class FireElements {
 	}
 	
 	/**
-	 * Get the chidren element.
+	 * Get chidren element.
 	 * @return FireElements
 	 */
 	children() {
@@ -192,13 +192,41 @@ class FireElements {
 	}
 
 	/**
+	 * Get clones elements.
+	 * @return FireElements
+	 */
+	clone() {
+		let list = new FireElements();
+		this.each(function(e){
+			list.push(this.clone());
+		});
+		return list;
+	}
+
+	/**
 	 * Add element at the end.
 	 * @param e FireElement
 	 * @return FireElements
 	 */
 	append(e) {
 		this.each(function(el){
-			el.append(e);
+			e.each(function(e){
+				el.append(e);
+			})
+		});
+		return this;
+	}
+
+	/**
+	 * Add element at the begin.
+	 * @param e FireElement
+	 * @return FireElements
+	 */
+	prepend(e) {
+		this.each(function(el){
+			e.each(function(e){
+				el.prepend(e);
+			})
 		});
 		return this;
 	}
@@ -437,7 +465,10 @@ class FireElements {
 	 * @return object {left, top}
 	 */
 	offset() {
-		return this.eq(0).offset();
+		if (this.eq(0)) {
+			return this.eq(0).offset();
+		}
+		return null;
 	}
 	
 	/**
@@ -615,12 +646,34 @@ class FireElement {
 	}
 
 	/**
+	 * Get clone element.
+	 * @return FireElements
+	 */
+	clone() {
+		let clone = this.node().cloneNode();
+		delete clone.firejs_id;
+		return this.firejs.new(clone);
+	}
+
+	/**
 	 * Add element at the end.
 	 * @param e FireElement
 	 * @return FireElements
 	 */
 	append(e) {
 		this.node().appendChild(e.node());
+		return this;
+	}
+
+	/**
+	 * Add element at the end.
+	 * @param e FireElement
+	 * @return FireElements
+	 */
+	prepend(e) {
+		let children = this.children();
+		let child = (children.size() > 0) ? (children.eq(0).node()) : (null);
+		this.node().insertBefore(e.node(), child);
 		return this;
 	}
 
