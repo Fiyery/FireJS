@@ -658,7 +658,7 @@ class FireElement {
 	 * @return FireElements
 	 */
 	clone() {
-		let clone = this.node().cloneNode();
+		let clone = this.node().cloneNode(true);
 		delete clone.firejs_id;
 		return this.firejs.new(clone);
 	}
