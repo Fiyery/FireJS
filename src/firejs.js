@@ -92,6 +92,16 @@ class FireJS {
 			if (data.params && (typeof data.params === "object")) {
 				let params_list = [];
 				for(let name in data.params) {
+					switch (data.params[name]) {
+						case true: 
+							data.params[name] = "1"; break;
+						case false: 
+							data.params[name] = "0"; break;
+						case null:
+						case undefined:
+						case NaN:
+							data.params[name] = ""; break;
+					}
 					params_list.push(name+"="+encodeURIComponent(data.params[name]));
 				}
 				params = params_list.join("&");
