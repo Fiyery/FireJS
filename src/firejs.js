@@ -197,10 +197,32 @@ class FireElements {
 	 */
 	clone() {
 		let list = new FireElements();
-		this.each(function(e){
+		this.each(function(){
 			list.push(this.clone());
 		});
 		return list;
+	}
+
+	/**
+	 * Remove children.
+	 * @return FireElements
+	 */
+	empty() {
+		this.each(function(){
+			this.empty();
+		});
+		return this;
+	}
+
+	/**
+	 * Remove selected elements.
+	 * @return null
+	 */
+	remove() {
+		this.each(function(){
+			this.remove();
+		});
+		return null;
 	}
 
 	/**
@@ -661,6 +683,27 @@ class FireElement {
 		let clone = this.node().cloneNode(true);
 		delete clone.firejs_id;
 		return this.firejs.new(clone);
+	}
+
+	/**
+	 * Remove children.
+	 * @return FireElements
+	 */
+	empty() {
+		let node = this.node();
+		while (node.firstChild) {
+			node.removeChild(node.firstChild);
+		}
+		return this;
+	}
+
+	/**
+	 * Remove selected elements.
+	 * @return null
+	 */
+	remove() {
+		this.node().remove();
+		return null;
 	}
 
 	/**
