@@ -174,7 +174,7 @@ class FireElements {
 	}
 	
 	/**
-	 * Get the parents.
+	 * Get the parent element.
 	 * @return FireElements
 	 */
 	parent() {
@@ -185,6 +185,21 @@ class FireElements {
 			}
 		});
 		return (list.size() > 0) ? (list) : (null);
+	}
+
+	/**
+	 * Get the parents.
+	 * @param string query
+	 * @return FireElements
+	 */
+	parents(query) {
+		let list = new FireElements();
+		this.each(function(e){
+			e.parents(query).each(function(p){
+				list.push(p);
+			});
+		});
+		return list;
 	}
 	
 	/**
@@ -670,6 +685,26 @@ class FireElement {
 	 */
 	parent() {
 		return this.firejs.new(this.prop("parentNode"));
+	}
+
+	/**
+	 * Get the parents.
+	 * @param string query
+	 * @return FireElements
+	 */
+	parents(query) {
+		let list = new FireElements();
+		let selectored = (typeof query !== "undefined");
+
+		let current = this;
+		while (current.prop("parentElement")) {
+			current = current.firejs.new(current.prop("parentNode"));
+			let node = current.node();
+			if (selectored === false || node.matches && node.matches(query) || node.msMatchesSelector && node.msMatchesSelector(query)) {
+				list.push(current);
+			}
+		}	
+		return list;
 	}
 	
 	/**
