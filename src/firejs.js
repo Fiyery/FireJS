@@ -288,14 +288,17 @@ class FireElements {
 
 	/**
 	 * Set Text element.
-	 * @param string string
+	 * @param string value
 	 * @return FireElements
 	 */
-	text(string) {
-		this.each(function(e){
-			e.text(string);
-		});
-		return this;
+	text(value) {
+		if (typeof value !== "undefined") {
+			this.each(function(e){
+				e.text(value);
+			});
+			return this;
+		}
+		return this.eq(0).text();
 	}
 
 	/**
@@ -775,12 +778,15 @@ class FireElement {
 
 	/**
 	 * Set Text element.
-	 * @param string string
+	 * @param string value
 	 * @return FireElements
 	 */
-	text(string) {
-		this.node().textContent = string;
-		return this;
+	text(value) {
+		if (typeof value !== "undefined") {
+			this.node().textContent = value;
+			return this;
+		}
+		return this.node().textContent;
 	}
 	
 	/**
