@@ -310,14 +310,14 @@ class FireElements {
 		let list = new FireElements();
 		for (let i = 0; i < this.size(); i++) {
 			let e = this.eq(i);
-			if (elements.element) {
-				if (elements.element !== e.element) {
+			if (elements.node()) {
+				if (elements.node() !== e.node()) {
 					list.push(e);
 				}
 			} else {
 				let find = false;
 				elements.each(function(el){
-					if (el.element === e.element) {
+					if (el.node() === e.node()) {
 						find = true;
 					}
 				});
@@ -716,7 +716,7 @@ class FireElement {
 
 		let current = this;
 		while (current.prop("parentElement")) {
-			current = current.firejs.new(current.prop("parentNode"));
+			current = current.__firejs.new(current.prop("parentNode"));
 			let node = current.node();
 			if (selectored === false || node.matches && node.matches(query) || node.msMatchesSelector && node.msMatchesSelector(query)) {
 				list.push(current);
@@ -733,7 +733,7 @@ class FireElement {
 		let list = new FireElements();
 		let that = this;
 		[].forEach.call(that.prop("children"), function(e){
-			list.push(that.firejs.new(e));
+			list.push(that.__firejs.new(e));
 		});
 		return list;
 	}
@@ -838,8 +838,8 @@ class FireElement {
 	find(query) {
 		let list = new FireElements();
 		let that = this;
-		[].forEach.call(that.element.querySelectorAll(query), function(e){
-			let f = that.firejs.new(e);
+		[].forEach.call(that.node().querySelectorAll(query), function(e){
+			let f = that.__firejs.new(e);
 			list.push(f);
 		});
 		return list;
