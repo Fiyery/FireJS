@@ -392,6 +392,18 @@ class FireElements {
 		});
 		return this;
 	}
+
+	/**
+	 * Unbind event listener.
+	 * @param event string
+	 * @return FireElements
+	 */
+	off(event)  {
+		this.each(function(e){
+			e.off(event);
+		});
+		return this;
+	}
 	
 	/**
 	 * Check if the element has the class.
@@ -651,19 +663,22 @@ class FireElement {
 	 */
 	constructor(e, firejs) {
         // HTMLElement overloaded.	
-		this.element = e;
+		this.__element = e;
+
+        // Store event listeners for off().	
+		this.__handlers = [];
 
         // Library FireJS Factory for new FireElement.
-		this.firejs = firejs;
+		this.__firejs = firejs;
 
         // Save the display property for hide and show methods.
-		this.display = document.defaultView.getComputedStyle(this.element, null).display.toLowerCase();
-		this.display_show = true;
-		if (this.display === "none") {
-			this.display_show = false;
+		this.__display = document.defaultView.getComputedStyle(this.node(), null).display.toLowerCase();
+		this.__display_show = true;
+		if (this.__display === "none") {
+			this.__display_show = false;
 		}
 		
-		this.element.firejs_id = Date.now().toString()+"-"+Math.random().toString().substring(2, 7);
+		this.node().firejs_id = Date.now().toString()+"-"+Math.random().toString().substring(2, 7);
 	}
 	
 	/**
@@ -687,7 +702,7 @@ class FireElement {
 	 * @return FireElement
 	 */
 	parent() {
-		return this.firejs.new(this.prop("parentNode"));
+		return this.__firejs.new(this.prop("parentNode"));
 	}
 
 	/**
@@ -730,7 +745,7 @@ class FireElement {
 	clone() {
 		let clone = this.node().cloneNode(true);
 		delete clone.firejs_id;
-		return this.firejs.new(clone);
+		return this.__firejs.new(clone);
 	}
 
 	/**
@@ -796,7 +811,7 @@ class FireElement {
 	next() {
 		let el = this.prop("nextElementSibling");
 		if (el) {
-			return this.firejs.new(el);
+			return this.__firejs.new(el);
 		} else {
 			return null;		
 		}
@@ -809,7 +824,7 @@ class FireElement {
 	prev() {
 		let el = this.prop("previousElementSibling");
 		if (el) {
-			return this.firejs.new(el);
+			return this.__firejs.new(el);
 		} else {
 			return null;
 		}
@@ -860,11 +875,31 @@ class FireElement {
 	on(event, callback) {
 		if (callback && typeof callback === "function") {
 			let context = this;
-			this.node().addEventListener(event, function(event) {
+			let handler = function(event) {
 				if (callback.call(context, event, context) === false) {
 					event.preventDefault();
 				}
-			}, false);
+			};
+			this.node().addEventListener(event, handler, false);
+			if (!this.__handlers[event]) {
+				this.__handlers[event] = [];
+			}
+			this.__handlers[event].push(handler);
+		}
+		return this;
+	}
+
+	/**
+	 * Unbind a event listener.
+	 * @param event string
+	 * @return FireElement
+	 */
+	off(event) {
+		if (this.__handlers[event]) {
+			for(let i = 0; i < this.__handlers[event].length; i++) {
+				this.node().removeEventListener(event, this.__handlers[event][i], false);
+				this.__handlers[event].splice(i--, 1);
+			}
 		}
 		return this;
 	}
@@ -998,12 +1033,12 @@ class FireElement {
 	 * @return FireElement
 	 */
 	show() {
-		if (this.display === "none") {
+		if (this.__display === "none") {
 			this.node().style.display = "block";
 		} else {
 			this.node().style.display = "";
 		}
-		this.display_show = true;
+		this.__display_show = true;
 		return this;
 	} 
 	
@@ -1013,7 +1048,7 @@ class FireElement {
 	 */
 	hide() {
 		this.node().style.display = "none";
-		this.display_show = false;
+		this.__display_show = false;
 		return this;
 	}
 	
@@ -1022,7 +1057,7 @@ class FireElement {
 	 * @return FireElement
 	 */
 	toggle() {
-		if (this.display_show) {
+		if (this.__display_show) {
 			this.hide();
 		} else {
 			this.show();
@@ -1071,7 +1106,7 @@ class FireElement {
 	 * @return Node
 	 */
 	node() {
-		return this.element;
+		return this.__element;
 	}
 }
 
