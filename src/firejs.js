@@ -78,8 +78,8 @@ class FireJS {
 
 	/**
 	 * Run AJAX query.
-	 * @param data 
-	 * @param callback
+	 * @param data object
+	 * @param callback Function
 	 * @return Promise
 	 */
 	ajax(data, callback) {
@@ -125,6 +125,35 @@ class FireJS {
 			xhr.onerror = () => reject(xhr.statusText);
 			xhr.send(params);
 		});
+	}
+
+	/**
+	 * Observe object's value change and execute callback.
+	 * @param obj Object
+	 * @param prop String|Object|Function 
+	 * @param callback Function
+	 */
+	watch(obj, prop, callback) {
+		if (typeof prop === "function") {
+			callback = prop;
+			prop = Object.keys(obj);
+		}
+		if (typeof prop !== "object") {
+			prop = [prop];
+		}
+		for(let p of prop) {
+			let value = obj[p];
+			Object.defineProperty(obj, p, {
+				get: function () { 
+					return value; 
+				},
+				set: function (v) {
+					let old_value = value;
+					value = v;
+					callback(old_value, p);
+				}
+			});
+		}
 	}
 }
 
