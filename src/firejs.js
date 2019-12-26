@@ -522,6 +522,7 @@ class FireElements {
 	 * @return FireElements
 	 */
 	css(name, value) {
+		console.log("parent", name, value);
 		if (typeof value !== "undefined") {
 			this.each(function(e){
 				e.css(name, value);
@@ -804,7 +805,7 @@ class FireElement {
 	 * @return FireElements
 	 */
 	append(e) {
-		this.node().appendChild(e.node());
+		this.node().appendChild(e.clone().node());
 		return this;
 	}
 
@@ -1011,6 +1012,7 @@ class FireElement {
 	 * @return FireElement
 	 */
 	css(name, value) {
+		console.log(name, value);
 		if (typeof name === "string") {
 			this.node().style[name] = value;
 		} else if (typeof name === "object") {
