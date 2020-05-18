@@ -1,0 +1,28 @@
+/* Color Theme */
+$dark-primary-color : #F57C00;
+$default-primary-color : #448AFF; /* #FF9800 */
+$light-primary-color : #FFE0B2;
+$accent-color : #448AFF; 
+$primary-text-color : #212121;
+$secondary-text-color : #727272;
+$accent-text-color : #FFFFFF;
+$border-color : #D1D1D1;
+$divider-color : #B6B6B6;
+$background-page : #FAFAFA;
+$background-content : #FFFFFF;
+$background-hover-button : #E8E8E8;
+$background-alpha: 0.90;
+$background-alpha-table: 0.15;
+
+/* Box shadow level */
+$box-shadow-depth-1 : 0 1px 6px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.12);
+$box-shadow-depth-2 : 0 3px 10px rgba(0,0,0,0.16), 0 3px 10px rgba(0,0,0,0.23);
+$box-shadow-depth-3 : 0 10px 30px rgba(0,0,0,0.19), 0 6px 10px rgba(0,0,0,0.23);
+$box-shadow-depth-4 :0 14px 45px rgba(0,0,0,0.25), 0 10px 18px rgba(0,0,0,0.22);
+$box-shadow-depth-5 : 0 19px 60px rgba(0,0,0,0.3), 0 15px 20px rgba(0,0,0,0.22);
+
+/* Alert message */
+$alert-error : #F59896;
+$alert-warning : #FFD595;
+$alert-info : #9ACFFA;
+$alert-success : #CBE4AF;
