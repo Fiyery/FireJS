@@ -1,0 +1,210 @@
+.group_field        
+{ 
+	position: relative; 
+	margin: 18px auto 12px auto; 
+	min-width: 300px;
+	max-width: 400px;
+	min-height: 42px;
+
+	&.no_marging
+	{
+		margin: auto;
+	}
+
+	&.hide
+	{
+		opacity: 0;
+		visibility: hidden;
+		height: 0;
+	}
+	  
+	&.align_left
+	{
+		margin-left: 0;
+	}
+
+	&.align_right
+	{
+		margin-right: 0;
+	}
+
+	&.width_full
+	{
+		width: 100%;
+		max-width: none;
+		min-width: 0;
+    }
+  
+	input, textarea, select         
+	{
+		margin-top: 18px;
+		font-size: 16px;
+		padding: 10px 10px 10px 5px;
+		display: block;
+		border: none;
+		width: 100%;
+		min-height: 42px;
+        border-bottom: 1px solid $border-color;
+        box-sizing: border-box;
+        background-color: $background-content;
+
+        &:-webkit-autofill 
+        {
+            -webkit-box-shadow: 0 0 0 1000px $background-content inset;
+        }
+
+
+
+		&[type="checkbox"], &[type="radio"]
+		{
+			margin-top: 0;
+			opacity: 0;
+			top: 0;
+			left: 0;
+			bottom: 0; 
+			right: 0;
+			height: 42px;
+			cursor: pointer;
+
+			& ~ label 
+			{
+				width: 100%;
+				left: 0;
+				top: 0;
+                padding: 10px;
+				border-bottom: 1px solid $border-color;
+                background-color: $background-content;
+			}
+
+			&:checked ~ label
+			{
+				left: 0;
+				top: 0;
+				color: $accent-color;
+				box-shadow: 0 0 3px 1px $accent-color;
+				
+			}
+		}
+
+		&[type="file"], &:disabled
+		{
+			background-color: $background-content;
+		}
+
+		&:disabled
+		{
+			cursor: default;
+
+			&[type="checkbox"] ~ label, &[type="radio"] ~ label
+			{
+				color: $secondary-text-color; 
+			}
+
+			&[type="checkbox"]:checked ~ label, &[type="radio"]:checked ~ label
+			{
+				box-shadow: 0 0 3px 1px $primary-text-color;
+				color: $primary-text-color; 
+			}
+
+			& ~ .bar 
+			{
+				background-color: $divider-color;
+			}
+
+			& ~ label 
+			{
+				color: $primary-text-color;
+			}
+		}
+
+		&:focus
+		{
+			outline:none;
+		}
+	}
+
+	textarea[data-autoresize]
+	{
+		overflow-y: hidden;
+		resize: none;
+	}
+
+	label          
+	{
+		color: $secondary-text-color; 
+		font-size: 16px;
+		font-weight: normal;
+		position: absolute;
+		pointer-events: none;
+		left: 5px;
+		top: 10px;
+		transition: 0.2s ease all; 
+    }
+    
+    &.disabled label
+    {
+        background-color: $border-color;
+    }
+	
+    &.active label,
+    input:not([type="submit"]):not([type="checkbox"]):not([type="radio"]):focus ~ label, 
+    textarea:focus ~ label,
+    select ~ label, 
+    input[type="file"] ~ label
+	{
+		top: -10px;
+		font-size: 14px;
+		color: $accent-color;
+    }
+
+	select, input[type="file"]
+	{
+		padding-left: 0;
+
+		& ~ label 
+		{
+			color: $primary-text-color; 
+		}
+
+		&:focus ~ label 
+		{
+			color: $accent-color;
+		}
+	}
+	
+	.bar  
+	{ 
+		position: relative; 
+		display: block; 
+		width: 100%;
+
+		&:before, &:after 
+		{
+			content: "";
+			height: 2px; 
+			width: 0px;
+			bottom: 1px; 
+			position: absolute;
+			background: $accent-color; 
+			transition: 0.2s ease all; 
+		}
+
+		&:before 
+		{
+			left: 50%;
+		}
+
+		&:after 
+		{
+			right: 50%; 
+		}
+	}
+	
+	input:not([type="submit"]):not([type="checkbox"]):not([type="radio"]):focus ~ .bar:before, 
+	input:not([type="submit"]):not([type="checkbox"]):not([type="radio"]):focus ~ .bar:after,
+	textarea:focus ~ .bar:before, 
+	textarea:focus ~ .bar:after 
+	{
+		width: 50%;
+	}
+}

@@ -1,0 +1,36 @@
+.button
+{
+	border: 0px;
+	line-height: 36px;
+	margin: 8px;
+	font-size: 14px;
+	padding-left: 16px;
+	padding-right: 16px;
+	cursor: pointer;
+	width: auto;
+	box-sizing: border-box;
+	background-color: $accent-color;
+    color: $accent-text-color;
+
+    &:hover 
+    {
+        box-shadow: $box-shadow-depth-1;
+    }
+
+    &.inactive
+	{
+		color: $accent-color;
+        background-color: transparent;
+        
+        &:hover 
+        {
+            background-color: $background-hover-button;
+        }
+    }
+
+    &:disabled 
+    {
+        background-color: $divider-color;
+        color: $primary-text-color;
+    }
+}

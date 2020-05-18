@@ -4,32 +4,41 @@
  * Main class.
  */
 class FireJS {
-    /**
+	/**
 	 * Setup of object.
 	 */
-    constructor() {
-        this.datalist = {}
+	constructor() {
+		this.datalist = {}
+		this.__ready = false;
 
-        // to test whether we have singleton or not
-        this.time = new Date()
+		// to test whether we have singleton or not
+		this.time = new Date()
 
-        return this.instance;
-    }
+		return this.instance;
+	}
 
-    /**
+	/**
 	 * Execute the callback function when the page is loaded.
-     * @param callback
+	 * @param callback
 	 */
 	ready(callback) {
 		if (callback && typeof callback === "function") {
-			document.addEventListener("DOMContentLoaded", callback);
+
+			if (this.__ready) {
+				callback();
+			} else {
+				document.addEventListener("DOMContentLoaded", () => {
+					this.__ready = true;
+					callback();
+				});
+			}
 		}
 	}
 
-    /**
+	/**
 	 * Get the HTML elements with CSS selector.
-     * @param query CSS selector
-     * @return FireElements
+	 * @param query CSS selector
+	 * @return FireElements
 	 */
 	get(query) {
 		let res = document.querySelectorAll(query);
@@ -50,7 +59,7 @@ class FireJS {
 
 	/**
 	 * Create a FireElement from HTMLElement.
-     * @param e HTMLElement
+	 * @param e HTMLElement
 	 */
 	new(e) {
 		if (!e || !(e instanceof HTMLElement)) {
@@ -111,7 +120,7 @@ class FireJS {
 				try {
 					json_return = JSON.parse(xhr.response);
 				} catch (e) {
-					throw "Server return wrong JSON response";
+					json_return = {error : "Server return wrong JSON response"};
 				}
 				new Promise((resolve, reject) => {
 					if (typeof callback === "function") {
@@ -162,17 +171,17 @@ class FireJS {
  */
 class FireElements {
 
-    /**
-     * Constructor.
-     */
-    constructor() {
-        // Contains FireElements.
-        this.list = [];
-    }
+	/**
+	 * Constructor.
+	 */
+	constructor() {
+		// Contains FireElements.
+		this.list = [];
+	}
 	
 	/**
 	 * Get number of elements.
-     * @return number
+	 * @return number
 	 */
 	size() {
 		return this.list.length;
@@ -181,7 +190,7 @@ class FireElements {
 	/**
 	 * Add element to the list.
 	 * @param e FireElement
-     * @return FireElements
+	 * @return FireElements
 	 */
 	push(e) {
 		this.list.push(e);
@@ -191,7 +200,7 @@ class FireElements {
 	/**
 	 * Walk the lsit of elements with callback.
 	 * @param callback Function
-     * @return FireElements
+	 * @return FireElements
 	 */
 	each(callback) {
 		if (callback && typeof callback === "function") {
@@ -247,12 +256,13 @@ class FireElements {
 
 	/**
 	 * Get clones elements.
+	 * @param bool listeners Copy event listeners on new element.
 	 * @return FireElements
 	 */
-	clone() {
+	clone(listeners) {
 		let list = new FireElements();
 		this.each(function(){
-			list.push(this.clone());
+			list.push(this.clone(listeners));
 		});
 		return list;
 	}
@@ -432,6 +442,14 @@ class FireElements {
 			e.off(event);
 		});
 		return this;
+	}
+
+	/**
+	 * Get events listeners.
+	 * @param Object event 
+	 */
+	events(event) {
+		return this.eq(0).events();
 	}
 	
 	/**
@@ -691,16 +709,16 @@ class FireElement {
 	 * @param firejs FireJS
 	 */
 	constructor(e, firejs) {
-        // HTMLElement overloaded.	
+		// HTMLElement overloaded.	
 		this.__element = e;
 
-        // Store event listeners for off().	
-		this.__handlers = [];
+		// Store event listeners for off().	
+		this.__handlers = {};
 
-        // Library FireJS Factory for new FireElement.
+		// Library FireJS Factory for new FireElement.
 		this.__firejs = firejs;
 
-        // Save the display property for hide and show methods.
+		// Save the display property for hide and show methods.
 		this.__display = document.defaultView.getComputedStyle(this.node(), null).display.toLowerCase();
 		this.__display_show = true;
 		if (this.__display === "none") {
@@ -769,12 +787,20 @@ class FireElement {
 
 	/**
 	 * Get clone element.
+	 * @param bool listeners Copy event listeners on new element.
 	 * @return FireElements
 	 */
-	clone() {
-		let clone = this.node().cloneNode(true);
-		delete clone.firejs_id;
-		return this.__firejs.new(clone);
+	clone(listeners) {
+		let clone = this.__firejs.new(this.node().cloneNode(true));
+		if (listeners) {
+			let events = this.events();
+			for (let name in events) {
+				for (let handler of events[name]) {
+                    clone.on(name, handler);
+                }
+            }
+		}
+		return clone;
 	}
 
 	/**
@@ -804,7 +830,7 @@ class FireElement {
 	 * @return FireElements
 	 */
 	append(e) {
-		this.node().appendChild(e.clone().node());
+		this.node().appendChild(e.clone(true).node());
 		return this;
 	}
 
@@ -909,17 +935,17 @@ class FireElement {
 					event.preventDefault();
 				}
 			};
-			this.node().addEventListener(event, handler, false);
-			if (!this.__handlers[event]) {
-				this.__handlers[event] = [];
-			}
-			this.__handlers[event].push(handler);
+			event.split(/\s+/).forEach((e) => {
+				this.node().addEventListener(e, handler, false);
+				this.__handlers[e] = this.__handlers[e] || [];
+				this.__handlers[e].push(handler);
+			});
 		}
 		return this;
 	}
 
 	/**
-	 * Unbind a event listener.
+	 * Unbind all event listeners on one event.
 	 * @param event string
 	 * @return FireElement
 	 */
@@ -931,6 +957,17 @@ class FireElement {
 			}
 		}
 		return this;
+	}
+
+	/**
+	 * Get events listeners.
+	 * @param Object|Array event 
+	 */
+	events(event) {
+		if (typeof event === "undefined") {
+			return this.__handlers;
+		}
+		return event in this.__handlers ? this.__handlers[event] : [];
 	}
 	
 	/**
@@ -1051,10 +1088,10 @@ class FireElement {
 	 */
 	offset() {
 		var rect = this.node().getBoundingClientRect();
-        return {
-            top: rect.top + document.body.scrollTop,
-            left: rect.left + document.body.scrollLeft
-        }
+		return {
+			top: rect.top + document.body.scrollTop,
+			left: rect.left + document.body.scrollLeft
+		}
 	}
 	
 	/**

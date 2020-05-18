@@ -1,0 +1,154 @@
+.modal
+{
+	visibility : hidden;
+	transition-property: visibility;
+    transition-delay: 0.2s;
+	top: 64px;
+	bottom: 0; 
+	right: 0;
+	left: 0;
+	position: fixed;
+	z-index: 60;
+	padding-top: 2px;
+	display: flex;
+	align-items: center;
+
+	.box 
+	{
+		position: relative;
+		left: 2%;
+		width: 96%;
+		z-index: 61;
+		top: -32px; /* Taille de la topbar pour center. */
+		box-shadow: $box-shadow-depth-3;
+		max-height: calc(100vh - 180px);
+		
+		.head
+		{
+			background-color: $accent-color;
+			height: 48px;
+			position: relative;
+			
+			.title
+			{
+				line-height: 48px;
+				color: #FFF;
+				padding-left: 12px;
+				font-size: 120%;
+			}
+			
+			.close 
+			{
+				padding: 12px;
+				margin: 0px;
+				position: absolute;
+				right: 0;
+				top: 0;
+				cursor: pointer;
+				
+				img
+				{
+					width: 24px;
+					height: 24px;
+				}
+			}
+		}
+		
+		.content
+		{
+			background-color: $background-page;
+			max-height: calc(100vh - 180px - 48px);
+			overflow-y: auto;
+			
+			.padding
+			{
+				padding: 12px;
+			}
+		}
+    }
+    
+    &.visible
+    {
+        visibility : visible;
+        transition-property: visibility;
+        transition-delay: 0s;
+        
+        .box 
+        {
+            transform: scale(0);
+            animation: zoom_in 0.4s 0.2s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+        }
+
+        .background_mask
+        {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+
+    &.hide .box 
+    {
+        animation: zoom_out 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+    }
+
+    &.lock .close
+    {
+        display: none;
+    }
+
+    &.padding .content 
+    {
+        padding: 12px;
+    }
+
+    .background_mask
+    {
+        position: fixed;
+        z-index: 60;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0; 
+        background-color: rgba(0,0,0,0.7);
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease-in-out, visibility 0.3s;
+    }
+}
+
+@media screen and (min-width: 1280px)
+{
+	.modal
+	{	
+		.box 
+		{
+			left: 16%;
+			width: 68%;
+		}
+	}
+}
+
+@keyframes zoom_in 
+{
+	0%
+	{
+		transform: scale(0);
+	}
+	100%
+	{
+		transform: scale(1);
+	}
+}
+@keyframes zoom_out
+{
+	0%
+	{
+		transform: scale(1);
+	}
+	100%
+	{
+		transform: scale(0);
+	}
+}
+
