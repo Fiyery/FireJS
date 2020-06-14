@@ -1,0 +1,31 @@
+.test {
+	display: flex;
+	flex-direction: column;
+	background: red;
+}
+
+.hover div
+{
+	display: none;
+}
+
+.hover:hover div
+{
+	display: block;
+}	
+
+#responsive 
+{
+	display: none;
+	width: 150px;
+	height: 100px;
+	background-color: #CACACA;
+}
+
+@media screen and (min-width: 960px)
+{
+	#responsive 
+	{
+		display: flex;
+	}
+}

@@ -23,12 +23,12 @@ class Component {
     render() {
         this.attr();
         var wrapper = document.createElement('div');
-        wrapper.innerHTML = this.bind(this.html()).trim();
-        this.new_element = fire.new(wrapper.firstChild);
+		wrapper.innerHTML = this.bind(this.html()).trim();
+		this.new_element = fire.new(wrapper.firstChild);
         if (this.inner_html) {
-            this.fill(this.new_element);
-        }
-        this.set();
+			this.fill(this.new_element);
+		}
+		this.set();
     }
 
     /**
@@ -43,7 +43,7 @@ class Component {
     }
 
     /**
-     * Set attributs to new element.
+     * Set attributs to new element or dynamic HTML.
      * @param FireElement node facultative
      */
     set(node) {
@@ -80,7 +80,7 @@ class Component {
      * @return string
      */
     bind(html) {
-        this.inner_html = (html.indexOf("{$inner_html}"));
+        this.inner_html = (html.indexOf("{$inner_html}") >= 0);
         return html;
     }
 

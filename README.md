@@ -76,10 +76,11 @@ The JS librairy is developping to fit this structure and gulpfile.js is configur
 
 ### List of component
 
-- `<mbutton>` : Material Design button
-- `<mgroup_field>` : Intern component for form tag, you don't need to use it
-- `<minput>` : Material Design input. Warning, you need write `<minput></minput>` for working
-- `<modal>` : Material Design modal / popin
-- `<modal_button>` : Button to show popin with `data-id` attribute whitch contains the id of modal
-- `<mselect>` : Material Design select
-- `<mbutton>` : Material Design submit form button
+- `<fbutton>` : Material Design button
+- `<fgroup_field>` : Intern component for form tag, you don't need to use it
+- `<finput>` : Material Design input. Warning, you need write `<finput></finput>` for working
+- `<fmodal>` : Material Design modal / popin
+- `<fmodal_button>` : Button to show popin with `data-id` attribute whitch contains the id of modal
+- `<fpage>` : Material Design pagination bloc witch setup with `data-begin` (start page), `data-end` (last page), `data-current` (current page), `data-target` (url or js visible function), `data-view` (number of current side page show) and `data-urlparam` (name of url param for pagination)
+- `<fselect>` : Material Design select
+- `<fsubmit>` : Material Design submit form button

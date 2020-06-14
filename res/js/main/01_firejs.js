@@ -410,11 +410,12 @@ class FireElements {
 	/**
 	 * Trigger a event.
 	 * @param event string
-	 * @param FireElements 
+	 * @param params object Additionnal parameters
+	 * @return FireElements 
 	 */
-	trigger(event) {
+	trigger(event, params) {
 		this.each(function(e){
-			e.trigger(event);
+			e.trigger(event, params);
 		});
 		return this;
 	}
@@ -518,7 +519,7 @@ class FireElements {
 	}
 
 	/**
-	 * Setter/getter of attribut the class.
+	 * Setter/getter of attribut.
 	 * @param name string
 	 * @param value string
 	 * @return FireElements
@@ -531,6 +532,22 @@ class FireElements {
 			return this;
 		}
 		return this.eq(0).attr(name);
+	}
+
+	/**
+	 * Setter/getter of special attribut dataset.
+	 * @param name string
+	 * @param value string
+	 * @return FireElements
+	 */
+	data(name, value) {
+		if (typeof value !== "undefined") {
+			this.each(function(e){
+				e.data(name, value);
+			});
+			return this;
+		}
+		return this.eq(0).data(name);
 	}
 
 	/**
@@ -903,19 +920,14 @@ class FireElement {
 	/**
 	 * Trigger a event.
 	 * @param event string
-	 * @param FireElements 
+	 * @param params object Additionnal parameters
+	 * @return FireElement 
 	 */
-	trigger(event) {
-		if (typeof this.prop(event) === "function") {
+	trigger(event, params) {
+		if (typeof this.prop(event) === "function" && !params) {
 			this.prop(event).call(this.node());
 		} else {
-			let object = null;
-			if (typeof CustomEvent !== "undefined") {
-				object = new CustomEvent(event, {bubbles: true, cancelable: true});
-			} else {
-				object = document.createEvent('Event');
-				object.initEvent(event, true, true);
-			}
+			let object = new CustomEvent(event, {bubbles: true, cancelable: true, detail: params});
 			this.node().dispatchEvent(object);
 		} 
 		return this;
@@ -971,14 +983,14 @@ class FireElement {
 	}
 	
 	/**
-	 * Setter/getter of attribut the class.
+	 * Setter/getter of attribut.
 	 * @param name string
 	 * @param value string
 	 * @return FireElements
 	 */
 	attr(name, value) {
 		if (typeof value !== "undefined") {
-			if (value === null) {
+			if (value === null || value === false) {
 				this.node().removeAttribute(name);
 			} else {
 				this.node().setAttribute(name, value);
@@ -986,6 +998,24 @@ class FireElement {
 			return this;
 		}
 		return this.node().getAttribute(name);
+	}
+
+	/**
+	 * Setter/getter of special attribut data.
+	 * @param name string
+	 * @param value string
+	 * @return FireElements
+	 */
+	data(name, value) {
+		if (typeof value !== "undefined") {
+			if (value === null || value === false) {
+				delete this.node().dataset[name];
+			} else {
+				this.node().dataset[name] = value;
+			}
+			return this;
+		}
+		return this.node().dataset[name];
 	}
 	
 	/**
