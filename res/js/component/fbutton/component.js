@@ -1,8 +1,8 @@
 "use strict";
 
-class ComponentMButton extends Component {
+class ComponentFButton extends Component {
 
-    static tag = "mbutton";
+    static tag = "fbutton";
 
     html() {
         return `
@@ -13,4 +13,4 @@ class ComponentMButton extends Component {
     }
 }
 
-fire.component.add(ComponentMButton);
+fire.component.add(ComponentFButton);

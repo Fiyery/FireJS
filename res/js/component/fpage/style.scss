@@ -1,0 +1,53 @@
+.bloc_page 
+{
+	display: flex;
+    justify-content: center;
+    color: $secondary-text-color;
+	margin: 12px;
+	
+	svg, .bloc_page_number div
+	{
+		cursor: pointer;
+	}
+
+	svg 
+	{
+		width: 36px;
+		fill: $secondary-text-color;
+
+		&:hover 
+		{
+			fill: $default-primary-color;
+		}
+	}
+
+	.bloc_page_number
+	{
+		display: flex;
+    	justify-content: center;
+
+		div 
+		{
+			min-width: 36px;
+			height: 36px;
+			margin: 3px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 16px;
+			font-family: $font-family;
+
+			&:hover 
+			{
+				color: $default-primary-color;
+			}
+
+			&.selected
+			{
+				border-radius: 2px;
+				background-color: $default-primary-color;
+				color: $accent-text-color;
+			}
+		}
+	}
+}

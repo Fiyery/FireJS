@@ -1,8 +1,8 @@
 "use strict";
 
-class ComponentModalButton extends Component {
+class ComponentFModalButton extends Component {
 
-    static tag = "modal_button";
+    static tag = "fmodal_button";
 
     constructor(element) {
         super(element);
@@ -10,9 +10,9 @@ class ComponentModalButton extends Component {
 
     html() {
         return `
-            <mbutton>
+            <fbutton>
                 {$inner_html}
-            </mbutton>
+            </fbutton>
         `;
     }
 
@@ -25,4 +25,4 @@ class ComponentModalButton extends Component {
     }
 }
 
-fire.component.add(ComponentModalButton);
+fire.component.add(ComponentFModalButton);

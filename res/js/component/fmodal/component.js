@@ -1,8 +1,8 @@
 "use strict";
 
-class ComponentModal extends Component {
+class ComponentFModal extends Component {
 
-    static tag = "modal";
+    static tag = "fmodal";
 
     constructor(element) {
         super(element);
@@ -61,4 +61,4 @@ class ComponentModal extends Component {
     }
 }
 
-fire.component.add(ComponentModal);
+fire.component.add(ComponentFModal);

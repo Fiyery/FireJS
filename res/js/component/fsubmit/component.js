@@ -1,8 +1,8 @@
 "use strict";
 
-class ComponentMSubmit extends Component {
+class ComponentFSubmit extends Component {
 
-    static tag = "msubmit";
+    static tag = "fsubmit";
 
     html() {
 		return `
@@ -19,4 +19,4 @@ class ComponentMSubmit extends Component {
     }
 }
 
-fire.component.add(ComponentMSubmit);
+fire.component.add(ComponentFSubmit);

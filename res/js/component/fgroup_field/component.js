@@ -1,8 +1,8 @@
 "use strict";
 
-class ComponentMGroupField extends Component {
+class ComponentFGroupField extends Component {
 
-    static tag = "mgroup_field";
+    static tag = "fgroup_field";
 
     constructor(element) {
         super(element);
@@ -35,4 +35,4 @@ class ComponentMGroupField extends Component {
     }
 }
 
-fire.component.add(ComponentMGroupField);
+fire.component.add(ComponentFGroupField);

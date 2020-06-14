@@ -1,8 +1,8 @@
 "use strict";
 
-class ComponentMInput extends Component {
+class ComponentFSelect extends Component {
 
-	static tag = "minput";
+	static tag = "fselect";
 
 	constructor(element) {
 		super(element);
@@ -10,31 +10,32 @@ class ComponentMInput extends Component {
 
 	html() {
 		return `
-			<mgroup_field>    
-				<input/>
+			<fgroup_field>    
+				<select>{$inner_html}</select>
 				<span class="bar"></span>
 				<label>{$label}</label>
-			</mgroup_field>
+			</fgroup_field>
 		`;
 	}
 
 	bind(html) {
+        html = super.bind(html);
 		html = html.replace("{$label}", this.element.attr("data-label"));
 		delete this.attributes["data-label"];
 		return html;
 	}
 
 	set() {
-		super.set(this.new_element.find("input"));
+		super.set(this.new_element.find("select"));
     }
     
     action() {
-        let el = this.new_element.find("input");
+        let el = this.new_element.find("select");
         el.parent().trigger(el.val() ? "active" : "desactive");
     }
 
     handle() {
-        let el = this.new_element.find("input");
+        let el = this.new_element.find("select");
 
         el.on("init blur input", (e) => {
             let el = fire.new(e.target);
@@ -44,4 +45,4 @@ class ComponentMInput extends Component {
     }
 }
 
-fire.component.add(ComponentMInput);
+fire.component.add(ComponentFSelect);
