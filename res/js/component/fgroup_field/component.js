@@ -21,13 +21,13 @@ class ComponentFGroupField extends Component {
         
         let el = this.new_element;
 
-        el.on("active", (e) => {
-            let el = fire.new(e.target);
+        el.on("active", (ev) => {
+            let el = fire.new(ev.target);
             el.addClass("active");
         });
 
-        el.on("desactive", (e) => {
-            let el = fire.new(e.target);
+        el.on("desactive", (ev) => {
+            let el = fire.new(ev.target);
             el.removeClass("active");
         });
 

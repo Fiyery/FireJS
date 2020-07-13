@@ -79,17 +79,18 @@ class ComponentFPage extends Component {
 				}
 			}
 		}
-		this.new_element.find(".page_begin").attr("data-page", begin);
-		this.new_element.find(".page_prev").attr("data-page", (current - 1 > begin) ? (current - 1) : (begin));
-		this.new_element.find(".page_next").attr("data-page", (current + 1 < end) ? (current + 1) : (end));
-		this.new_element.find(".page_end").attr("data-page", end);
+		this.new_element.find(".page_begin svg").attr("data-page", begin);
+		this.new_element.find(".page_prev svg").attr("data-page", (current - 1 > begin) ? (current - 1) : (begin));
+		this.new_element.find(".page_next svg").attr("data-page", (current + 1 < end) ? (current + 1) : (end));
+		this.new_element.find(".page_end svg").attr("data-page", end);
 	 }
 	 
     action() {
 		let pages = this.new_element.find("*[data-page]");
-		pages.off("click").on("click", (ev, el) => {
+		pages.off("click").on("click", (ev) => {
+			let el = fire.new(ev.target);
 			this.new_element.trigger("change", {page: el.attr("data-page")});
-		})	
+		})
 	}
 	
 	handle() {
@@ -111,8 +112,10 @@ class ComponentFPage extends Component {
 						this.action();
 					} else {
 						let urlparam = element.data("urlparam") || this.default_urlparam;
+						let regex = new RegExp("(\\?|\\&)page=\\d+");
+						target = target.replace(regex, "");
 						if (target.indexOf("?") > 0) {
-							target = target.replace("/" + urlparam + "/=\d+", "") + "&" + urlparam + "=" + page;
+							target = target + "&" + urlparam + "=" + page;
 						} else {
 							target = target + "?" + urlparam + "=" + page;
 						}

@@ -36,8 +36,8 @@ class ComponentFInput extends Component {
     handle() {
         let el = this.new_element.find("input");
 
-        el.on("init blur input", (e) => {
-            let el = fire.new(e.target);
+        el.on("init blur input", (ev) => {
+			let el = fire.new(ev.target);
             let event = el.val() ? "active" : "desactive";
             el.parent().trigger(event);
         });

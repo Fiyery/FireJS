@@ -74,7 +74,7 @@ The JS librairy is developping to fit this structure and gulpfile.js is configur
 |    |    ...
 ```
 
-### List of component
+### List of components
 
 - `<fbutton>` : Material Design button
 - `<fgroup_field>` : Intern component for form tag, you don't need to use it
@@ -84,3 +84,4 @@ The JS librairy is developping to fit this structure and gulpfile.js is configur
 - `<fpage>` : Material Design pagination bloc witch setup with `data-begin` (start page), `data-end` (last page), `data-current` (current page), `data-target` (url or js visible function), `data-view` (number of current side page show) and `data-urlparam` (name of url param for pagination)
 - `<fselect>` : Material Design select
 - `<fsubmit>` : Material Design submit form button
+- `<ftab>` : Material Design tab 
