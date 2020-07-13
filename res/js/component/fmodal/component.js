@@ -36,10 +36,10 @@ class ComponentFModal extends Component {
     }
 
     action() {
-        let el = this.new_element.attr("data-modal", "1");
+        let el = this.new_element;
 
-        el.find(".close, .background_mask").on("click", (e) => {
-            let el = fire.new(e.target);
+        el.find(".close, .background_mask").on("click", (ev) => {
+            let el = fire.new(ev.target);
             el.parents(".modal").trigger("close");
         });
     }
@@ -49,13 +49,13 @@ class ComponentFModal extends Component {
         
         let el = this.new_element;
 
-        el.on("close", (e) => {
-            let el = fire.new(e.target);
+        el.on("close", (ev) => {
+            let el = fire.new(ev.target);
             el.addClass("hide").removeClass("visible");
         });
 
-        el.on("open", (e) => {
-            let el = fire.new(e.target);
+        el.on("open", (ev) => {
+            let el = fire.new(ev.target);
             el.removeClass("hide").addClass("visible");
         });
     }
