@@ -19,7 +19,7 @@ class FireJS {
 
 	/**
 	 * Execute the callback function when the page is loaded.
-	 * @param callback
+	 * @param {Function} callback
 	 */
 	ready(callback) {
 		if (callback && typeof callback === "function") {
@@ -37,8 +37,8 @@ class FireJS {
 
 	/**
 	 * Get the HTML elements with CSS selector.
-	 * @param query CSS selector
-	 * @return FireElements
+	 * @param {String} query CSS selector
+	 * @return {FireElements}
 	 */
 	get(query) {
 		let res = document.querySelectorAll(query);
@@ -58,28 +58,35 @@ class FireJS {
 	}
 
 	/**
-	 * Create a FireElement from HTMLElement.
-	 * @param e HTMLElement
+	 * Create a FireElement from Element.
+	 * @param {Element} e
+	 * @return {FireElements}
 	 */
 	new(e) {
-		if (!e || !(e instanceof HTMLElement)) {
+		if (!e || !(e instanceof Element)) {
+			console.trace();
+			console.log("fire.new() => ", e);
+			throw "Fire.new() allow only Element";
 			return null;
 		}
 		let el = e;
+		let list = new FireElements();
 		if (el.firejs_id && this.datalist[el.firejs_id]) {
 			// If element is known, it was loaded from datalist.
-			return this.datalist[el.firejs_id];
+			list.push(this.datalist[el.firejs_id]);
 		} else {
 			let f = new FireElement(e, this);
 			// Add to datalist elements.
 			this.datalist[f.prop("firejs_id")] = f;
-			return f;
+			list.push(f);
 		}
+		return list;
 	}
 
 	/**
 	 * Create new HTML element.
-	 * @param string name Tag HTML
+	 * @param {String} name Tag HTML
+	 * @return {FireElements}
 	 */
 	create(name) {
 		return this.new(document.createElement(name));
@@ -87,9 +94,9 @@ class FireJS {
 
 	/**
 	 * Run AJAX query.
-	 * @param data object
-	 * @param callback Function
-	 * @return Promise
+	 * @param {Object} data 
+	 * @param {Function} callback 
+	 * @return {Promise}
 	 */
 	ajax(data, callback) {
 		return new Promise((resolve, reject) => {
@@ -138,9 +145,9 @@ class FireJS {
 
 	/**
 	 * Observe object's value change and execute callback.
-	 * @param obj Object
-	 * @param prop String|Object|Function 
-	 * @param callback Function
+	 * @param {Object} obj 
+	 * @param {String|Object|Function} prop
+	 * @param {Function} callback 
 	 */
 	watch(obj, prop, callback) {
 		if (typeof prop === "function") {
@@ -181,7 +188,7 @@ class FireElements {
 	
 	/**
 	 * Get number of elements.
-	 * @return number
+	 * @return {number}
 	 */
 	size() {
 		return this.list.length;
@@ -189,8 +196,8 @@ class FireElements {
 
 	/**
 	 * Add element to the list.
-	 * @param e FireElement
-	 * @return FireElements
+	 * @param {FireElement} e
+	 * @return {FireElements}
 	 */
 	push(e) {
 		this.list.push(e);
@@ -199,8 +206,8 @@ class FireElements {
 
 	/**
 	 * Walk the lsit of elements with callback.
-	 * @param callback Function
-	 * @return FireElements
+	 * @param {Function} callback 
+	 * @return {FireElements}
 	 */
 	each(callback) {
 		if (callback && typeof callback === "function") {
@@ -213,7 +220,7 @@ class FireElements {
 	
 	/**
 	 * Get the parent element.
-	 * @return FireElements
+	 * @return {FireElements}
 	 */
 	parent() {
 		let list = new FireElements();
@@ -227,8 +234,8 @@ class FireElements {
 
 	/**
 	 * Get the parents.
-	 * @param string query
-	 * @return FireElements
+	 * @param {String} query
+	 * @return {FireElements}
 	 */
 	parents(query) {
 		let list = new FireElements();
@@ -242,7 +249,7 @@ class FireElements {
 	
 	/**
 	 * Get chidren element.
-	 * @return FireElements
+	 * @return {FireElements}
 	 */
 	children() {
 		let list = new FireElements();
@@ -256,8 +263,8 @@ class FireElements {
 
 	/**
 	 * Get clones elements.
-	 * @param bool listeners Copy event listeners on new element.
-	 * @return FireElements
+	 * @param {bool} listeners Copy event listeners on new element.
+	 * @return {FireElements}
 	 */
 	clone(listeners) {
 		let list = new FireElements();
@@ -269,7 +276,7 @@ class FireElements {
 
 	/**
 	 * Remove children.
-	 * @return FireElements
+	 * @return {FireElements}
 	 */
 	empty() {
 		this.each(function(){
@@ -280,7 +287,7 @@ class FireElements {
 
 	/**
 	 * Remove selected elements.
-	 * @return null
+	 * @return {null}
 	 */
 	remove() {
 		this.each(function(){
@@ -291,8 +298,8 @@ class FireElements {
 
 	/**
 	 * Add element at the end.
-	 * @param e FireElement
-	 * @return FireElements
+	 * @param {FireElement} e
+	 * @return {FireElements}
 	 */
 	append(e) {
 		this.each(function(el){
@@ -309,8 +316,8 @@ class FireElements {
 
 	/**
 	 * Add element at the begin.
-	 * @param e FireElement
-	 * @return FireElements
+	 * @param {FireElement} e
+	 * @return {FireElements}
 	 */
 	prepend(e) {
 		this.each(function(el){
@@ -327,8 +334,8 @@ class FireElements {
 
 	/**
 	 * Set Text element.
-	 * @param string value
-	 * @return FireElements
+	 * @param {String} value
+	 * @return {FireElements}
 	 */
 	text(value) {
 		if (typeof value !== "undefined") {
@@ -342,8 +349,8 @@ class FireElements {
 
 	/**
 	 * Delete elements in the selected list.
-	 * @param elements FireElements
-	 * @return FireElements
+	 * @param {FireElements} elements
+	 * @return {FireElements}
 	 */
 	not(elements) {
 		let list = new FireElements();
@@ -370,7 +377,7 @@ class FireElements {
 	
 	/**
 	 * Get the next element.
-	 * @return FireElements
+	 * @return {FireElements}
 	 */
 	next() {
 		let list = new FireElements();
@@ -382,7 +389,7 @@ class FireElements {
 	
 	/**
 	 * Get the previous element.
-	 * @return FireElements
+	 * @return {FireElements}
 	 */
 	prev() {
 		let list = new FireElements();
@@ -394,8 +401,8 @@ class FireElements {
 
 	/**
 	 * Find elements in children nodes.
-	 * @param query string
-	 * @return FireElements
+	 * @param {String} query
+	 * @return {FireElements}
 	 */
 	find(query) {
 		let list = new FireElements();
@@ -409,9 +416,9 @@ class FireElements {
 
 	/**
 	 * Trigger a event.
-	 * @param event string
-	 * @param params object Additionnal parameters
-	 * @return FireElements 
+	 * @param {String} event
+	 * @param {Object} params Additionnal parameters
+	 * @return {FireElements} 
 	 */
 	trigger(event, params) {
 		this.each(function(e){
@@ -422,9 +429,9 @@ class FireElements {
 	
 	/**
 	 * Listen a event and execute the callback function when event triggering.
-	 * @param event string
-	 * @param callback Function
-	 * @return FireElements
+	 * @param {String} event
+	 * @param {Function} callback 
+	 * @return {FireElements}
 	 */
 	on(event, callback)  {
 		this.each(function(e){
@@ -435,8 +442,8 @@ class FireElements {
 
 	/**
 	 * Unbind event listener.
-	 * @param event string
-	 * @return FireElements
+	 * @param {String} event
+	 * @return {FireElements}
 	 */
 	off(event)  {
 		this.each(function(e){
@@ -447,16 +454,16 @@ class FireElements {
 
 	/**
 	 * Get events listeners.
-	 * @param Object event 
+	 * @param {Object} event 
 	 */
 	events(event) {
-		return this.eq(0).events();
+		return (this.eq(0)) ? this.eq(0).events() : {};
 	}
 	
 	/**
 	 * Check if the element has the class.
-	 * @param name string
-	 * @return boolean
+	 * @param {String} name
+	 * @return {bool}
 	 */
 	hasClass(name) {
 		let bool = true;
@@ -468,8 +475,8 @@ class FireElements {
 	
 	/**
 	 * Add the class.
-	 * @param name string
-	 * @return FireElements
+	 * @param {String} name
+	 * @return {FireElements}
 	 */
 	addClass(name) {
 		this.each(function(e){
@@ -480,8 +487,8 @@ class FireElements {
 	
 	/**
 	 * Remove the class.
-	 * @param name string
-	 * @return FireElements
+	 * @param {String} name
+	 * @return {FireElements}
 	 */
 	removeClass(name) {
 		this.each(function(e){
@@ -492,8 +499,8 @@ class FireElements {
 	
 	/**
 	 * Toggle the class.
-	 * @param name string
-	 * @return FireElements
+	 * @param {String} name
+	 * @return {FireElements}
 	 */
 	toggleClass(name) {
 		this.each(function(e){
@@ -504,9 +511,9 @@ class FireElements {
 
 	/**
 	 * Setter/getter of attribut the class.
-	 * @param name string
-	 * @param value string
-	 * @return FireElements
+	 * @param {String} name
+	 * @param {String} value
+	 * @return {FireElements}
 	 */
 	prop(name, value) {
 		if (typeof value !== "undefined") {
@@ -515,14 +522,14 @@ class FireElements {
 			});
 			return this;
 		}
-		return this.eq(0).prop(name);
+		return (this.eq(0)) ? (this.eq(0).prop(name)) : (null);
 	}
 
 	/**
 	 * Setter/getter of attribut.
-	 * @param name string
-	 * @param value string
-	 * @return FireElements
+	 * @param {String} name
+	 * @param {String} value
+	 * @return {FireElements}
 	 */
 	attr(name, value) {
 		if (typeof value !== "undefined") {
@@ -531,14 +538,14 @@ class FireElements {
 			});
 			return this;
 		}
-		return this.eq(0).attr(name);
+		return (this.eq(0)) ? (this.eq(0).attr(name)) : (null);
 	}
 
 	/**
 	 * Setter/getter of special attribut dataset.
-	 * @param name string
-	 * @param value string
-	 * @return FireElements
+	 * @param {String} name
+	 * @param {String} value
+	 * @return {FireElements}
 	 */
 	data(name, value) {
 		if (typeof value !== "undefined") {
@@ -547,14 +554,14 @@ class FireElements {
 			});
 			return this;
 		}
-		return this.eq(0).data(name);
+		return (this.eq(0)) ? (this.eq(0).data(name)) : (null);
 	}
 
 	/**
 	 * Define CSS properties.
-	 * @param name string
-	 * @param value string
-	 * @return FireElements
+	 * @param {String} name
+	 * @param {String} value
+	 * @return {FireElements}
 	 */
 	css(name, value) {
 		if (typeof value !== "undefined") {
@@ -568,8 +575,8 @@ class FireElements {
 
 	/**
 	 * Define or not and get width element.
-	 * @param value number
-	 * @return number
+	 * @param {int} value
+	 * @return {number}
 	 */
 	width(value) {
 		if (value) {
@@ -582,8 +589,8 @@ class FireElements {
 
 	/**
 	 * Define or get height element.
-	 * @param value number
-	 * @return number
+	 * @param {int} value
+	 * @return {number}
 	 */
 	height(value) {
 		if (value) {
@@ -596,7 +603,7 @@ class FireElements {
 
 	/**
 	 * Get offset for top and left element in the page.
-	 * @return object {left, top}
+	 * @return {Object} {left, top}
 	 */
 	offset() {
 		if (this.eq(0)) {
@@ -607,7 +614,7 @@ class FireElements {
 	
 	/**
 	 * Show the element with its saved display property.
-	 * @return FireElements
+	 * @return {FireElements}
 	 */
 	show() {
 		this.each(function(e){
@@ -618,7 +625,7 @@ class FireElements {
 
 	/**
 	 * Hide the element with display egals none.
-	 * @return FireElements
+	 * @return {FireElements}
 	 */
 	hide() {
 		this.each(function(e){
@@ -629,7 +636,7 @@ class FireElements {
 	
 	/**
 	 * Toggle the visibility of element.
-	 * @return FireElements
+	 * @return {FireElements}
 	 */
 	toggle() {
 		this.each(function(e){ 
@@ -640,7 +647,7 @@ class FireElements {
 
 	/**
 	 * Get values of form elements.
-	 * @return string
+	 * @return {String}
 	 */
 	val(data) {
 		if (typeof data !== "undefined") {
@@ -657,7 +664,7 @@ class FireElements {
 
 	/**
 	 * Return the nodes.
-	 * @return FireElements
+	 * @return {FireElements}
 	 */
 	node() {
 		let list = [];
@@ -672,7 +679,7 @@ class FireElements {
 
 	/**
 	 * Get contents of the first element.
-	 * @return string
+	 * @return {String}
 	 */
 	html(content) {
 		if (typeof content !== "undefined") {
@@ -689,19 +696,19 @@ class FireElements {
 
 	/**
 	 * Return the specifique element with its index.
-	 * @param number index 
-	 * @return FireElement 
+	 * @param {int} value 
+	 * @return {FireElement} 
 	 */
-	eq(index) {
-		if (index < 0) {
-			index = this.list.length + (index - 1);
+	eq(value) {
+		if (value < 0) {
+			value = this.list.length + (value - 1);
 		}
-		return this.list[index];
+		return this.list[value];
 	}
 
 	/**
 	 * Return the first element.
-	 * @return FireElement 
+	 * @return {FireElement} 
 	 */
 	first() {
 		return this.list[0];
@@ -709,7 +716,7 @@ class FireElements {
 
 	/**
 	 * Return the last element.
-	 * @return FireElement 
+	 * @return {FireElement} 
 	 */
 	last() {
 		return this.list[this.list.length - 1];
@@ -717,16 +724,16 @@ class FireElements {
 }
 
 /**
- * Overloading of HTMLElement.
+ * Overloading of Element.
  */
 class FireElement {
 	/**
 	 * Setup of object.
-	 * @param e HTMLElement
-	 * @param firejs FireJS
+	 * @param {Element} e
+	 * @param {FireJS} firejs
 	 */
 	constructor(e, firejs) {
-		// HTMLElement overloaded.	
+		// Element overloaded.	
 		this.__element = e;
 
 		// Store event listeners for off().	
@@ -742,12 +749,12 @@ class FireElement {
 			this.__display_show = false;
 		}
 		
-		this.node().firejs_id = Date.now().toString()+"-"+Math.random().toString().substring(2, 7);
+		this.prop("firejs_id", Date.now().toString()+"-"+Math.random().toString().substring(2, 7));
 	}
 	
 	/**
-	 * Get the property of HTMLElement.
-	 * @param name string
+	 * Get the property of Element.
+	 * @param {String} name
 	 */
 	prop(name, value) {
 		if (typeof value !== "undefined") {
@@ -763,7 +770,7 @@ class FireElement {
 	
 	/**
 	 * Get the parent.
-	 * @return FireElement
+	 * @return {FireElement}
 	 */
 	parent() {
 		return this.__firejs.new(this.prop("parentNode"));
@@ -771,8 +778,8 @@ class FireElement {
 
 	/**
 	 * Get the parents.
-	 * @param string query
-	 * @return FireElements
+	 * @param {String} query
+	 * @return {FireElements}
 	 */
 	parents(query) {
 		let list = new FireElements();
@@ -780,7 +787,7 @@ class FireElement {
 
 		let current = this;
 		while (current.prop("parentElement")) {
-			current = current.__firejs.new(current.prop("parentNode"));
+			current = this.__firejs.new(current.prop("parentNode"));
 			let node = current.node();
 			if (selectored === false || node.matches && node.matches(query) || node.msMatchesSelector && node.msMatchesSelector(query)) {
 				list.push(current);
@@ -791,7 +798,7 @@ class FireElement {
 	
 	/**
 	 * Get the chidren.
-	 * @return FireElements
+	 * @return {FireElements}
 	 */
 	children() {
 		let list = new FireElements();
@@ -804,25 +811,66 @@ class FireElement {
 
 	/**
 	 * Get clone element.
-	 * @param bool listeners Copy event listeners on new element.
-	 * @return FireElements
+	 * @param {bool} listeners Copy event listeners on new element.
+	 * @return {FireElements}
 	 */
 	clone(listeners) {
 		let clone = this.__firejs.new(this.node().cloneNode(true));
-		if (listeners) {
-			let events = this.events();
-			for (let name in events) {
-				for (let handler of events[name]) {
-                    clone.on(name, handler);
-                }
-            }
+		if (!listeners) {
+			return clone;
 		}
+		let events = this._get_events_recursive(this);
+		this._copy_events_recursive(clone, events);
 		return clone;
 	}
 
 	/**
+	 * Get all events of FireElement and its children.
+	 * @param {FireElement} node 
+	 * @param {string} pos 
+	 * @return {Object}
+	 */
+	_get_events_recursive(node, pos) {
+		pos = pos || "/"
+		let events = {};
+		if (Object.entries(node.events()).length > 0) {
+			events[pos] = {
+				handlers: node.events(),
+				element: node.node()
+			}
+		}
+		let i = 0;
+		node.children().each((c) => {
+			Object.assign(events, this._get_events_recursive(c, pos + i++ + "/"));
+		});
+		return events;
+	}
+
+	/**
+	 * Copy all events into node and its children.
+	 * @param {FireElement} node 
+	 * @param {Object} events 
+	 * @param {string} pos 
+	 */
+	_copy_events_recursive(node, events, pos) {
+		pos = pos || "/";
+		if (events[pos]) {
+			for (let name in events[pos].handlers) {
+				for (let handler of events[pos].handlers[name]) {
+					node.on(name, handler);
+				}
+			}
+		}
+		let i = 0;
+		node.children().each((c) => {
+			this._copy_events_recursive(c, events, pos + i + "/");
+			i++;
+		});
+	}
+
+	/**
 	 * Remove children.
-	 * @return FireElements
+	 * @return {FireElements}
 	 */
 	empty() {
 		let node = this.node();
@@ -834,7 +882,7 @@ class FireElement {
 
 	/**
 	 * Remove selected elements.
-	 * @return null
+	 * @return {null}
 	 */
 	remove() {
 		this.node().remove();
@@ -843,8 +891,8 @@ class FireElement {
 
 	/**
 	 * Add element at the end.
-	 * @param e FireElement
-	 * @return FireElements
+	 * @param {FireElement} e
+	 * @return {FireElements}
 	 */
 	append(e) {
 		this.node().appendChild(e.clone(true).node());
@@ -853,8 +901,8 @@ class FireElement {
 
 	/**
 	 * Add element at the end.
-	 * @param e FireElement
-	 * @return FireElements
+	 * @param {FireElement} e
+	 * @return {FireElements}
 	 */
 	prepend(e) {
 		let children = this.children();
@@ -865,20 +913,20 @@ class FireElement {
 
 	/**
 	 * Set Text element.
-	 * @param string value
-	 * @return FireElements
+	 * @param {String} value
+	 * @return {FireElements}
 	 */
 	text(value) {
 		if (typeof value !== "undefined") {
-			this.node().textContent = value;
+			this.prop("textContent", value);
 			return this;
 		}
-		return this.node().textContent;
+		return this.prop("textContent");
 	}
 	
 	/**
 	 * Get the next element.
-	 * @return FireElement
+	 * @return {FireElement}
 	 */
 	next() {
 		let el = this.prop("nextElementSibling");
@@ -891,7 +939,7 @@ class FireElement {
 	
 	/**
 	 * Get the previous element.
-	 * @return FireElement
+	 * @return {FireElement}
 	 */
 	prev() {
 		let el = this.prop("previousElementSibling");
@@ -904,8 +952,8 @@ class FireElement {
 
 	/**
 	 * Find elements in children nodes.
-	 * @param query string
-	 * @return FireElements
+	 * @param {String} query
+	 * @return {FireElements}
 	 */
 	find(query) {
 		let list = new FireElements();
@@ -919,15 +967,15 @@ class FireElement {
 
 	/**
 	 * Trigger a event.
-	 * @param event string
-	 * @param params object Additionnal parameters
-	 * @return FireElement 
+	 * @param {String} event
+	 * @param {Object} params Additionnal parameters
+	 * @return {FireElement} 
 	 */
 	trigger(event, params) {
 		if (typeof this.prop(event) === "function" && !params) {
 			this.prop(event).call(this.node());
 		} else {
-			let object = new CustomEvent(event, {bubbles: true, cancelable: true, detail: params});
+			let object = new CustomEvent(event, {bubbles: false, cancelable: true, detail: params});
 			this.node().dispatchEvent(object);
 		} 
 		return this;
@@ -935,9 +983,9 @@ class FireElement {
 	
 	/**
 	 * Listen a event and execute the callback function when event triggering.
-	 * @param event string
-	 * @param callback Function
-	 * @return FireElement
+	 * @param {String} event
+	 * @param {Function} callback 
+	 * @return {FireElement}
 	 */
 	on(event, callback) {
 		if (callback && typeof callback === "function") {
@@ -958,8 +1006,8 @@ class FireElement {
 
 	/**
 	 * Unbind all event listeners on one event.
-	 * @param event string
-	 * @return FireElement
+	 * @param {String} event
+	 * @return {FireElement}
 	 */
 	off(event) {
 		if (this.__handlers[event]) {
@@ -973,7 +1021,7 @@ class FireElement {
 
 	/**
 	 * Get events listeners.
-	 * @param Object|Array event 
+	 * @param {Object|Array} event 
 	 */
 	events(event) {
 		if (typeof event === "undefined") {
@@ -984,9 +1032,9 @@ class FireElement {
 	
 	/**
 	 * Setter/getter of attribut.
-	 * @param name string
-	 * @param value string
-	 * @return FireElements
+	 * @param {String} name
+	 * @param {String} value
+	 * @return {FireElements}
 	 */
 	attr(name, value) {
 		if (typeof value !== "undefined") {
@@ -1002,9 +1050,9 @@ class FireElement {
 
 	/**
 	 * Setter/getter of special attribut data.
-	 * @param name string
-	 * @param value string
-	 * @return FireElements
+	 * @param {String} name
+	 * @param {String} value
+	 * @return {FireElements}
 	 */
 	data(name, value) {
 		if (typeof value !== "undefined") {
@@ -1020,8 +1068,8 @@ class FireElement {
 	
 	/**
 	 * Get value of attribut.
-	 * @param name string
-	 * @return FireElement
+	 * @param {String} name
+	 * @return {FireElement}
 	 */
 	get(name) {
 		return this.node().getAttribute(name);
@@ -1029,8 +1077,8 @@ class FireElement {
 	
 	/**
 	 * Check if the element has the class.
-	 * @param name string
-	 * @return boolean
+	 * @param {String} name
+	 * @return {bool}
 	 */
 	hasClass(name) {
 		return this.node().classList.contains(name);
@@ -1038,8 +1086,8 @@ class FireElement {
 	
 	/**
 	 * Add the class.
-	 * @param name string
-	 * @return FireElement
+	 * @param {String} name
+	 * @return {FireElement}
 	 */
 	addClass(name) {
 		if (name) {
@@ -1050,8 +1098,8 @@ class FireElement {
 	
 	/**
 	 * Remove the class.
-	 * @param name string
-	 * @return FireElement
+	 * @param {String} name
+	 * @return {FireElement}
 	 */
 	removeClass(name) {
 		if (name) {
@@ -1062,8 +1110,8 @@ class FireElement {
 	
 	/**
 	 * Toggle the class.
-	 * @param name string
-	 * @return FireElement
+	 * @param {String} name
+	 * @return {FireElement}
 	 */
 	toggleClass(name) {
 		if (name) {
@@ -1074,8 +1122,8 @@ class FireElement {
 
 	/**
 	 * Define CSS properties.
-	 * @param name string
-	 * @return FireElement
+	 * @param {String} name
+	 * @return {FireElement}
 	 */
 	css(name, value) {
 		if (typeof name === "string") {
@@ -1090,26 +1138,26 @@ class FireElement {
 
 	/**
 	 * Define or get width element.
-	 * @param value number
-	 * @return number
+	 * @param {int} value
+	 * @return {number}
 	 */
 	width(value) {
 		if (value) {
 			this.node().style.width = value + "px";
 		}
-		return this.node().offsetWidth;
+		return this.prop("offsetWidth");
 	}
 
 	/**
 	 * Define or get height element.
-	 * @param value number
-	 * @return number
+	 * @param {int} value
+	 * @return {number}
 	 */
 	height(value) {
 		if (value) {
 			this.node().style.height = value + "px";
 		}
-		return this.node().offsetHeight;
+		return this.prop("offsetHeight");
 	}
 
 	/**
@@ -1126,7 +1174,7 @@ class FireElement {
 	
 	/**
 	 * Show the element with its saved display property.
-	 * @return FireElement
+	 * @return {FireElement}
 	 */
 	show() {
 		if (this.__display === "none") {
@@ -1140,7 +1188,7 @@ class FireElement {
 	
 	/**
 	 * Hide the element with display egals none.
-	 * @return FireElement
+	 * @return {FireElement}
 	 */
 	hide() {
 		this.node().style.display = "none";
@@ -1150,7 +1198,7 @@ class FireElement {
 	
 	/**
 	 * Toggle the visibility of element.
-	 * @return FireElement
+	 * @return {FireElement}
 	 */
 	toggle() {
 		if (this.__display_show) {
@@ -1163,24 +1211,24 @@ class FireElement {
 
 	/**
 	 * Get values of form elements.
-	 * @return string
+	 * @return {String}
 	 */
 	val(data) {
-		if (this.node().type && this.node().type.toLowerCase() === "checkbox") {
+		if (this.prop("type") && this.prop("type").toLowerCase() === "checkbox") {
 			if (typeof data !== "undefined") {
-				this.node().checked = data;
+				this.prop("checked", data);
 			}
-			return this.node().checked;
-		} else if (this.node().type && this.node().type.toLowerCase() === "radio") {
+			return this.prop("checked");
+		} else if (this.prop("type") && this.prop("type").toLowerCase() === "radio") {
 			if (typeof data !== "undefined") {
-				this.node().checked = (this.node().value == data);
+				this.prop("checked", (this.prop("value") == data));
 			}
-			return this.node().value;
+			return this.prop("value");
 		} else if (typeof this.node().value !== "undefined") {
 			if (typeof data !== "undefined") {
-				this.node().value = data;
+				this.prop("value", data);
 			}
-			return this.node().value;
+			return this.prop("value");
 		} else {
 			return null;
 		}
@@ -1188,18 +1236,18 @@ class FireElement {
 
 	/**
 	 * Get contents of the element.
-	 * @return string
+	 * @return {String}
 	 */
 	html(content) {
 		if (typeof content !== "undefined") {
-			this.node().innerHTML = content;
+			this.prop("innerHTML", content);
 		}
-		return this.node().innerHTML;
+		return this.prop("innerHTML");
 	}
 
 	/**
 	 * Return the node.
-	 * @return Node
+	 * @return {Node}
 	 */
 	node() {
 		return this.__element;
