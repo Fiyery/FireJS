@@ -34,8 +34,9 @@ class ComponentManager {
         if (!this.list[tag]) {
             throw "Tag undefined in component list";
         }
-        let replacement = false;
-        fire.get(tag).each((el) => {
+		let replacement = false;
+		fire.get(tag + "[data-disabled]").hide();
+        fire.get(tag + ":not([data-disabled])").each((el) => {
             let component = new this.list[tag](el.node());
             component.render();
             component.replace();

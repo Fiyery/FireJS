@@ -9,20 +9,20 @@ class Component {
 
     /**
      * Define defaut value.
-     * @param FireElement element 
+     * @param {FireElement} element 
      */
     constructor(element) {
-        this.element = fire.new(element);
+		this.element = fire.new(element);
         this.new_element = null;
         this.inner_html = false;
     }
 
     /**
-     * Return html with var replacements.
+     * Define html with var replacements.
      */
     render() {
         this.attr();
-        var wrapper = document.createElement('div');
+        let wrapper = document.createElement('div');
 		wrapper.innerHTML = this.bind(this.html()).trim();
 		this.new_element = fire.new(wrapper.firstChild);
         if (this.inner_html) {
@@ -44,7 +44,7 @@ class Component {
 
     /**
      * Set attributs to new element or dynamic HTML.
-     * @param FireElement node facultative
+     * @param {FireElement} node facultative
      */
     set(node) {
         node = node || this.new_element;
@@ -63,64 +63,64 @@ class Component {
             } else {
                 node.attr(name, this.attributes[name]);
             }
-        }
+		}
     }
+
+	/**
+	 * Replace variables in html.
+	 * @param {String} html
+	 * @return {String}
+	 */
+	bind(html) {
+		this.inner_html = (html.indexOf("{$inner_html}") >= 0);
+		return html;
+	}
 
     /**
      * Define raw html content.
-     * @return string
+     * @return {String}
      */
     html() {
         return "";
     }
 
     /**
-     * Replace variables in html.
-     * @param string html
-     * @return string
-     */
-    bind(html) {
-        this.inner_html = (html.indexOf("{$inner_html}") >= 0);
-        return html;
-    }
-
-    /**
      * Insert inner HTML if there is $inner_html var in template.
-     * @param FireElement node
+     * @param {FireElement} node
      */
     fill(node) {
         if (this.node_inner_html_found) {
             return true;
-        }
+		}
         if (node.html().trim() === "{$inner_html}") {
             if (this.element.children().size() > 0) {
-                node.html('');
+				node.empty();
                 this.element.children().each((child) => {
-                    node.append(child);
-                });
+					node.append(child);
+				});
             } else {
                 node.html(this.element.html());
             }
-            this.node_inner_html_found = true;
+			this.node_inner_html_found = true;
             return true;
         }
         node.children().each((child) => {
             this.fill(child);
-        });
+		});
     }
 
     /**
      * Replace current element by the new one.
      */
     replace() {
-        this.element.parent().node().replaceChild(this.new_element.node(), this.element.node());
-    }
+		this.element.parent().node().replaceChild(this.new_element.node(), this.element.node());
+	}
 
     /**
      * Setup trigger of component.
      */
     action() {
-        
+		
     }
 
     /**
