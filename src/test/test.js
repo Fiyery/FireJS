@@ -1,11 +1,25 @@
-
 function change_page(page) {
-	console.log("changement de page => ", page);
+	console.log(page)
 }
 
 fire.ready(function(){
 
+	fire.get("#load_page").on("click", () => {
+		fire.get("fpage").data("disabled", false);
+		fire.component.run();
+	});
+
+
+
+
+
+
+
+	// console.log(fire.get(".page_begin").prop("children")[0]);
+
 	
+
+
 
     // fire.get("button").on("mouseover click", (e) => {
     //     console.log(e.type);
