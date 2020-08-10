@@ -83,5 +83,7 @@ The JS librairy is developping to fit this structure and gulpfile.js is configur
 - `<fmodal_button>` : Button to show popin with `data-id` attribute whitch contains the id of modal
 - `<fpage>` : Material Design pagination bloc witch setup with `data-begin` (start page), `data-end` (last page), `data-current` (current page), `data-target` (url or js visible function), `data-view` (number of current side page show) and `data-urlparam` (name of url param for pagination)
 - `<fselect>` : Material Design select
+- `<fstate>` : Material Design representation of state / status customable with `data-color`
 - `<fsubmit>` : Material Design submit form button
 - `<ftab>` : Material Design tab 
+- `<ftable>` : Material Design table that thead scroll and sort colum on click 

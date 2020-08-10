@@ -72,13 +72,15 @@ class ComponentFTable extends Component {
 
 		let el = this.new_element.find("thead th");
 
-        el.on("click", (ev) => {
-			let el = fire.new(ev.target);
-			if (!el.data("index")) {
-				el = el.parents("[data-index]");
-			}
-			el.parents("table").trigger("sort", {id: el.data("index")});
-        });
+		if (this.element.data("sort") !== "0") {
+			el.on("click", (ev) => {
+				let el = fire.new(ev.target);
+				if (!el.data("index")) {
+					el = el.parents("[data-index]");
+				}
+				el.parents("table").trigger("sort", {id: el.data("index")});
+			});
+		}
     }
 
     /**
