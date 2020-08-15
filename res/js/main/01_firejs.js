@@ -171,6 +171,20 @@ class FireJS {
 			});
 		}
 	}
+
+	/**
+	 * Iterate on object or array.
+	 * @param {Object|Array} object 
+	 * @param {Function} callback 
+	 */
+	each(object, callback) {
+		if (typeof object !== "object" || typeof callback !== "function") {
+			return false;
+		}
+		Object.keys(object).forEach(function(key) {
+			callback(object[key], key);
+		});
+	}
 }
 
 /**
