@@ -36,7 +36,14 @@ class ComponentFModal extends Component {
         html = html.replace("{$image}", this.attributes["data-image"]);
         delete this.attributes["data-image"];
         return super.bind(html);
-    }
+	}
+	
+	set() {
+		super.set();
+		if (this.attributes["data-lock"]) {
+			this.new_element.addClass("lock");
+		}
+	}
 
     action() {
         let el = this.new_element;
@@ -53,7 +60,10 @@ class ComponentFModal extends Component {
         let el = this.new_element;
 
         el.on("close", (ev) => {
-            let el = fire.new(ev.target);
+			let el = fire.new(ev.target);
+			if (el.hasClass("lock")) {
+				return false;
+			}
             el.addClass("hide").removeClass("visible");
         });
 
