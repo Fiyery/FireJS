@@ -1105,7 +1105,9 @@ class FireElement {
 	 */
 	addClass(name) {
 		if (name) {
-			this.node().classList.add(name);
+			name.split(" ").forEach((n) => {
+				this.node().classList.add(n);
+			});
 		}
 		return this;
 	}
@@ -1117,7 +1119,9 @@ class FireElement {
 	 */
 	removeClass(name) {
 		if (name) {
-			this.node().classList.remove(name);
+			name.split(" ").forEach((n) => {
+				this.node().classList.remove(n);
+			});
 		}
 		return this;
 	}
