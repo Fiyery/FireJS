@@ -50,7 +50,11 @@ class ComponentFModal extends Component {
 
         el.find(".close, .background_mask").on("click", (ev) => {
             let el = fire.new(ev.target);
-            el.parents(".modal").trigger("close");
+			let modal = el.parents(".modal");
+			if (modal.hasClass("lock")) {
+				return false;
+			}
+			modal.trigger("close");
         });
     }
 
