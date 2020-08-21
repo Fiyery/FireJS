@@ -1,0 +1,46 @@
+.fanimate_width
+{
+	animation: fanimate_width_show 0.4s ease-in-out;
+
+	&.fhidden 
+	{
+		animation: fanimate_width_hide 0.4s ease-in-out;
+		width: 0;
+		overflow: hidden;
+		visibility: hidden;
+		opacity: 0;
+	}
+}
+
+
+@keyframes fanimate_width_show
+{
+	0%
+	{
+		width: 0%
+	}
+	100%
+	{
+		width: 100%
+	}
+}
+
+@keyframes fanimate_width_hide
+{
+	0%
+	{
+		width: 100%;
+		visibility: visible;
+		opacity: 1;
+	}
+	99%
+	{
+		opacity: 1;
+	}
+	100%
+	{
+		width: 0%;
+		visibility: hidden;
+		opacity: 0;
+	}
+}
