@@ -79,6 +79,7 @@ The JS librairy is developping to fit this structure and gulpfile.js is configur
 - `<fbutton>` : Material Design button
 - `<fgroup_field>` : Intern component for form tag, you don't need to use it
 - `<finput>` : Material Design input. Warning, you need write `<finput></finput>` for working
+- `<fline_bloc>` : Bloc animate with 2 width animations on event "show" or "hide"
 - `<fmodal>` : Material Design modal / popin
 - `<fmodal_button>` : Button to show popin with `data-id` attribute whitch contains the id of modal
 - `<fpage>` : Material Design pagination bloc witch setup with `data-begin` (start page), `data-end` (last page), `data-current` (current page), `data-target` (url or js visible function), `data-view` (number of current side page show) and `data-urlparam` (name of url param for pagination)

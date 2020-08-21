@@ -47,13 +47,13 @@
         border-bottom: 1px solid $border-color;
         box-sizing: border-box;
         background-color: $background-content;
+		-webkit-appearance: none;
 
         &:-webkit-autofill 
         {
             -webkit-box-shadow: 0 0 0 1000px $background-content inset;
+            box-shadow: 0 0 0 1000px $background-content inset;
         }
-
-
 
 		&[type="checkbox"], &[type="radio"]
 		{
