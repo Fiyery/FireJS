@@ -63,10 +63,13 @@ class FireJS {
 	 * @return {FireElements}
 	 */
 	new(e) {
+		if (typeof e === "string") {
+			e = this.parse(e);
+		}
 		if (!e || !(e instanceof Element)) {
 			console.trace();
 			console.log("fire.new() => ", e);
-			throw "Fire.new() allow only Element";
+			throw "Fire.new() allow only Element or HTML";
 			return null;
 		}
 		let el = e;
@@ -81,6 +84,17 @@ class FireJS {
 			list.push(f);
 		}
 		return list;
+	}
+
+	/**
+	 * Convert HTML into Element
+	 * @param {String} html 
+	 * @return Element
+	 */
+	parse(html) {
+		var div = document.createElement('div');
+  		div.innerHTML = html.trim();
+  		return div.firstElementChild; 
 	}
 
 	/**
