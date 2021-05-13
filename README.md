@@ -88,3 +88,21 @@ The JS librairy is developping to fit this structure and gulpfile.js is configur
 - `<fsubmit>` : Material Design submit form button
 - `<ftab>` : Material Design tab 
 - `<ftable>` : Material Design table that thead scroll and sort colum on click 
+- `<ftext_editor>` : Material Design text editor 
+### FText_Editor
+Save 
+Attributs :
+* data-dir-image : URL of image directory that contains emojis
+* data-load-save : If "1" (default value), the editor try to get back content save in storageSession
+* data-save-id : Set the session save id in order to enable  multiple distinct text save 
+* data-save-time : Set the time between save in seconds (defaut is 10s) 
+
+Exemple : 
+```
+<ftext_editor 
+	data-dir-image="https://localhost/firejs/res/js/component/ftext_editor/img/emojis/"
+	data-load-save="1"
+	data-save-id="news"
+	data-save-time="5"
+></ftext_editor>
+```
