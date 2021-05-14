@@ -18,7 +18,7 @@ class ComponentFTextEditor extends Component {
 		this.data.load_save = (typeof this.element.attr("data-load-save") !== "undefined") ? (this.element.attr("data-load-save") === "1") : (true);
 		this.data.save_id = this.element.attr("data-save-id") || "commun";
 		this.data.save_time = this.element.attr("data-save-time") || 10;
-
+		this.data.value = this.element.attr("value");
 		this.data.form_id = this.element.attr("form") || null;
 
 		// For the selection.
@@ -55,6 +55,7 @@ class ComponentFTextEditor extends Component {
 		delete this.attributes["data-load-save"];
 		delete this.attributes["data-save-id"];
 		delete this.attributes["data-save-time"];
+		delete this.attributes["form"];
 		return html;
 	}
 
@@ -613,8 +614,16 @@ class ComponentFTextEditor extends Component {
 		super.action();
 		let that = this;
 
-		// Reset textarea.
+		// Set value textarea.
 		that.new_element.find("textarea.content").val("");
+		let content = localStorage.getItem("ftext_editor_save_" + this.data.save_id);
+		if (that.data.load_save && content != null) { // If there is a save, it's loaded.
+			that.new_element.find("div.content").html(content);
+			that.new_element.find("textarea.content").val(content);
+		} else if (that.data.value != undefined) {
+			this.new_element.find("div.content").html(that.data.value);
+			that.new_element.find("textarea.content").val(that.data.value);
+		}
 
 		that.init_save();
 
@@ -745,13 +754,6 @@ class ComponentFTextEditor extends Component {
 	}
 
 	init_save() {
-		// If there is a save, it's loaded.
-		if (this.data.load_save) {
-			let content = localStorage.getItem("ftext_editor_save_" + this.data.save_id);
-			this.new_element.find("div.content").html(content);
-			this.new_element.find("textarea.content").val(content);
-		}
-
 		this.interval_save = setInterval(()=>{
 			if (this.data.mode_wysiwyg) {
 				localStorage.setItem("ftext_editor_save_" + this.data.save_id, this.new_element.find("div.content").html());
