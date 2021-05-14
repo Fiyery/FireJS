@@ -592,7 +592,7 @@ class FireElements {
 	 * @return {FireElements}
 	 */
 	css(name, value) {
-		if (typeof value !== "undefined") {
+		if (typeof name !== "undefined") {
 			this.each(function(e){
 				e.css(name, value);
 			});

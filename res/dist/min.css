@@ -2,6 +2,13 @@ body{margin:0;padding:0;font-size:16px;font-family:'Roboto',sans-serif;color:#21
 .button{border:0;line-height:36px;margin:8px;font-size:14px;padding-left:16px;padding-right:16px;cursor:pointer;width:auto;box-sizing:border-box;background-color:#448aff;color:#fff}
 .button:hover{box-shadow:0 1px 6px rgba(0,0,0,0.12),0 1px 4px rgba(0,0,0,0.12)}.button.inactive{color:#448aff;background-color:transparent}
 .button.inactive:hover{background-color:#e8e8e8}.button:disabled{background-color:#b6b6b6;color:#212121}
+.fcircle_progress{position:relative;box-sizing:border-box;border-radius:50%;border:.15em solid #e8e8e8;width:1em;height:1em}
+.fcircle_progress .mask{position:absolute;width:1em;height:1em;left:-.15em;top:-.15em;clip:rect(0,1em,1em,0.5em)}
+.fcircle_progress[data-value^='5']:not([data-value='5']):not([data-value^='5.']) .mask,.fcircle_progress[data-value^='6']:not([data-value='6']):not([data-value^='6.']) .mask,.fcircle_progress[data-value^='7']:not([data-value='7']):not([data-value^='7.']) .mask,.fcircle_progress[data-value^='8']:not([data-value='8']):not([data-value^='8.']) .mask,.fcircle_progress[data-value^='9']:not([data-value='9']):not([data-value^='9.']) .mask,.fcircle_progress[data-value^='100'] .mask{clip:rect(auto,auto,auto,auto)}
+.fcircle_progress .bar1,.fcircle_progress .bar2{position:absolute;box-sizing:border-box;border-width:.15em;border-style:solid;border-color:#448aff;border-radius:50%;width:100%;height:100%;clip:rect(0,0.5em,1em,0);transition:transform .2s ease-in-out}
+.fcircle_progress .bar2{display:none;clip:rect(0,1em,1em,0.5em)}.fcircle_progress[data-value^='5']:not([data-value='5']):not([data-value^='5.']) .bar2,.fcircle_progress[data-value^='6']:not([data-value='6']):not([data-value^='6.']) .bar2,.fcircle_progress[data-value^='7']:not([data-value='7']):not([data-value^='7.']) .bar2,.fcircle_progress[data-value^='8']:not([data-value='8']):not([data-value^='8.']) .bar2,.fcircle_progress[data-value^='9']:not([data-value='9']):not([data-value^='9.']) .bar2,.fcircle_progress[data-value^='100'] .bar2{display:block}
+.fcircle_progress.info:before{content:attr(data-value) "%";font-size:.15em;height:100%;display:flex;align-items:center;justify-content:center;color:#448aff}
+.fcircle_progress:after{content:" ";position:absolute;display:flex;font-size:.15em;top:0;left:0;right:0;bottom:0;border-radius:50%;box-shadow:0 0 .5em rgba(0,0,0,0.5) inset}
 .group_field{position:relative;margin:18px auto 12px auto;min-width:300px;max-width:400px;min-height:42px}
 .group_field.no_marging{margin:auto}.group_field.hide{opacity:0;visibility:hidden;height:0}
 .group_field.align_left{margin-left:0}.group_field.align_right{margin-right:0}.group_field.width_full{width:100%;max-width:none;min-width:0}
