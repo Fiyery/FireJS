@@ -617,7 +617,7 @@ class ComponentFTextEditor extends Component {
 		// Set value textarea.
 		that.new_element.find("textarea.content").val("");
 		let content = localStorage.getItem("ftext_editor_save_" + this.data.save_id);
-		if (that.data.load_save && content != null) { // If there is a save, it's loaded.
+		if (that.data.load_save && content) { // If there is a save, it's loaded.
 			that.new_element.find("div.content").html(content);
 			that.new_element.find("textarea.content").val(content);
 		} else if (that.data.value != undefined) {
