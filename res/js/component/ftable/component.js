@@ -21,10 +21,23 @@ class ComponentFTable extends Component {
     set(node) {
 		super.set(node);
 
-		let i = 0;
-		this.new_element.find("thead th").each((e) => {
-			e.data("index", i++);
-		});
+		if (this.new_element.find("thead tr").size() > 0)
+		{
+			this.new_element.find("thead tr").each((tr) => {
+				let i = 0;
+				tr.find("th").each((th) => {
+					th.data("index", i++);
+				});
+			});
+		}
+		else
+		{
+			let i = 0;
+			this.new_element.find("thead th").each((th) => {
+				th.data("index", i++);
+			});
+		}
+		
 	}
 	
 	/**
@@ -98,6 +111,10 @@ class ComponentFTable extends Component {
         el.on("sort", (ev) => {
 			let el = fire.new(ev.target);
 			let index = ev.detail.id;
+			if (!index)
+			{
+				return false;
+			}
 			let th = el.find("thead th[data-index='" + index + "']");
 			let order = (th.data("order") === "asc") ? ("desc") : ("asc");
 			el.find("thead th").data("order", false).find(".order").remove();

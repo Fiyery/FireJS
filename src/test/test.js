@@ -75,26 +75,19 @@ fire.ready(function(){
 		  "company": "SUREMAX",
 		  "email": "lena.ramsey@suremax.info"
 		}
-	  ];
+	];
 
 	// fire.each(users, (val, key) => {
 	// 	console.log(key, "=> ", val);
 	// });
 
-	let html = [];
-	for (let i = 1; i < 15; i++) {
-		html.push("<div><button>Action "+i+"</button></div>");
-	}
-	for(let h of html) {
-		console.log(h);
-		fire.get("body").append(fire.new(h));
-	}
-
-
-
-
-
-
+	// let html = [];
+	// for (let i = 1; i < 15; i++) {
+	// 	html.push("<div><button>Action "+i+"</button></div>");
+	// }
+	// for(let h of html) {
+	// 	fire.get("body").append(fire.new(h));
+	// }
 	// console.log(fire.get(".page_begin").prop("children")[0]);
 
 	
