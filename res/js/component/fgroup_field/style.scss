@@ -123,10 +123,15 @@
 		}
 	}
 
-	textarea[data-autoresize]
+	textarea
 	{
-		overflow-y: hidden;
-		resize: none;
+		resize: vertical;
+
+		&[data-autoresize]
+		{
+			overflow-y: hidden;
+			resize: none;
+		}
 	}
 
 	label          

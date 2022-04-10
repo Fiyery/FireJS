@@ -1095,12 +1095,17 @@ class FireElement {
 	}
 	
 	/**
-	 * Get value of attribut.
-	 * @param {String} name
-	 * @return {FireElement}
+	 * Get the HTML elements with CSS selector.
+	 * @param {String} query CSS selector
+	 * @return {FireElements}
 	 */
-	get(name) {
-		return this.node().getAttribute(name);
+	 get(query) {
+		let list = new FireElements();
+		let that = this;
+		[].forEach.call(that.node().querySelectorAll(query), function(e){
+			list.push(that.__firejs.new(e));
+		});
+		return list;
 	}
 	
 	/**
