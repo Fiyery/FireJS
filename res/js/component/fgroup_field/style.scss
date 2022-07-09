@@ -213,3 +213,33 @@
 		width: 50%;
 	}
 }
+
+.group_checkbox
+{
+	position: relative;
+	padding-top: 20px;
+
+	.group_field     
+	{ 
+		margin: 0 auto 0 auto;
+	}
+
+	.label
+	{
+		position: absolute;
+		left: 5px;
+		top: 0;
+		font-size: 14px;
+    }
+    
+    &.grid.margin 
+    {
+        position: relative;
+        padding-top: 20px;
+    }
+
+	label 
+	{
+		box-sizing: border-box;
+	}
+}

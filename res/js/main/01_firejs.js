@@ -443,6 +443,21 @@ class FireElements {
 	}
 
 	/**
+	 * Find elements in children nodes.
+	 * @param {String} query
+	 * @return {FireElements}
+	 */
+	get(query) {
+		let list = new FireElements();
+		this.each(function(el){
+			el.get(query).each(function(e){
+				list.push(e);
+			});
+		});
+		return list;
+	}
+
+	/**
 	 * Trigger a event.
 	 * @param {String} event
 	 * @param {Object} params Additionnal parameters
